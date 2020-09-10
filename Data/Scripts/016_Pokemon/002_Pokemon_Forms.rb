@@ -690,18 +690,6 @@ MultipleForms.register(:EISCUE,{
   }
 })
 
-MultipleForms.register(:CRAMORANT,{
-  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
-    next 0 if pkmn.fainted? || endBattle
-  }
-})
-
-MultipleForms.register(:MORPEKO,{
-  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
-    next 0 if pkmn.fainted? || endBattle
-  }
-})
-
 MultipleForms.register(:INDEEDEE,{
   "getForm" => proc { |pkmn|
     next pkmn.gender
