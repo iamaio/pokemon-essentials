@@ -2886,11 +2886,16 @@ class PokeBattle_Move_186 < PokeBattle_Move
   def healingMove?; return true; end
 
   def pbMoveFailed?(user,targets)
-    jglheal = 0
-    for i in 0...targets.length
-      jglheal += 1 if (targets[i].hp == targets[i].totalhp || targets[i].canHeal?) && targets[i].status ==PBStatuses::NONE
+    allhealthy=targets.all? {|t| t.hp==t.totalhp && t.status==PBStatuses::NONE }
+    if user.hp==user.totalhp && user.status==PBStatuses::NONE && allhealthy
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
     end
-    if jglheal == targets.length 
+    return false
+  end
+
+  def pbFailsAgainstTarget?(user,target)
+    if target.status==PBStatuses::NONE && (target.hp==target.totalhp || !target.canHeal?)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -2898,12 +2903,10 @@ class PokeBattle_Move_186 < PokeBattle_Move
   end
 
   def pbEffectAgainstTarget(user,target)
-      target.pbCureStatus
-    if target.hp != target.totalhp && target.canHeal?
-      hpGain = (target.totalhp/4.0).round
-      target.pbRecoverHP(hpGain)
-      @battle.pbDisplay(_INTL("{1}'s health was restored.",target.pbThis))
-    end
+    target.pbCureStatus
+    hpGain = (target.totalhp/4.0).round
+    target.pbRecoverHP(hpGain)
+    @battle.pbDisplay(_INTL("{1}'s was restored.",target.pbThis))
     super
   end
 end
