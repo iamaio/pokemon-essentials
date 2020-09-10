@@ -39,9 +39,8 @@ class PokeBattle_Battler
     targeting = move.pbTarget(user)
     # Expanding Force
     if move.function == "192" &&
-       @battle.field.terrain == PBBattleTerrains::Psychic &&
-       !user.airborne?
-      targeting = PBTargets::AllNearFoes
+       @battle.field.terrain == PBBattleTerrains::Psychic && !user.airborne?
+       @battle.eachOtherSideBattler(user.index) { |b| pbAddTarget(targets,user,b,move,false) }
     end
     case targeting   # Curse can change its target type
     when PBTargets::NearAlly

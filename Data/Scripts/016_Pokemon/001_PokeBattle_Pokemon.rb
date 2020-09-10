@@ -21,6 +21,7 @@ class PokeBattle_Pokemon
   attr_accessor :moves       # Moves (PBMove)
   attr_accessor :firstmoves  # The moves known when this Pokémon was obtained
   attr_accessor :item        # Held item
+  attr_accessor :trmoves     # Technical Records
   attr_writer   :mail        # Mail
   attr_accessor :fused       # The Pokémon fused into this one
   attr_accessor :iv          # Array of 6 Individual Values for HP, Atk, Def,
@@ -617,6 +618,11 @@ class PokeBattle_Pokemon
     return ret
   end
 
+  def trmoves
+    @trmoves=[] if !@trmoves
+    return @trmoves
+  end
+  
   # Returns this Pokémon's mail.
   def mail
     return nil if !@mail

@@ -1037,7 +1037,7 @@ def pbMoveTutorChoose(move,movelist=nil,bymachine=false)
           pbMessage(_INTL("{1} can't learn {2}.",pokemon.name,movename))
         else
           if pbLearnMove(pokemon,move,false,bymachine)
-            ret = true
+            ret = chosen
             break
           end
         end

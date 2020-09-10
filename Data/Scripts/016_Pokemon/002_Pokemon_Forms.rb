@@ -683,7 +683,38 @@ MultipleForms.register(:ZACIAN,{
     next 0
   }
 })    
-  
+
+MultipleForms.register(:TOXEL,{
+  "getFormOnCreation" => proc { |pkmn|
+   natures=[1,5,7,10,12,15,16,17,18,20,21,23]
+   lowkey=false
+   nature=pkmn.nature
+   lowkey = true if natures.include?(nature)
+   next 1 if lowkey
+   next 0            
+  },
+})
+
+MultipleForms.copy(:TOXEL,:TOXTRICITY)
+
+MultipleForms.register(:EISCUE,{
+  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
+    next 0 if pkmn.fainted? || endBattle
+  }
+})
+
+MultipleForms.register(:CRAMORANT,{
+  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
+    next 0 if pkmn.fainted? || endBattle
+  }
+})
+
+MultipleForms.register(:MORPEKO,{
+  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
+    next 0 if pkmn.fainted? || endBattle
+  }
+})
+
 #===============================================================================
 # Alolan forms
 #===============================================================================
