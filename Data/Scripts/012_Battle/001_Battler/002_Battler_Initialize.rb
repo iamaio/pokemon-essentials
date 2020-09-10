@@ -139,7 +139,9 @@ class PokeBattle_Battler
       @effects[PBEffects::Telekinesis]       = 0
       @effects[PBEffects::JawLock]           = false
       @effects[PBEffects::JawLockUser]       = -1 
-	  @effects[PBEffects::NoRetreat]         = false
+	    @effects[PBEffects::NoRetreat]         = false
+      @effects[PBEffects::Octolock]          = false
+      @effects[PBEffects::OctolockUser]      = -1 
     end
     @damageState.reset
     @fainted               = (@hp==0)
