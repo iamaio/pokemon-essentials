@@ -396,29 +396,6 @@ class PokeBattle_Battler
       targets.each do |b|
         b.damageState.reset
         b.damageState.initialHP = b.hp
-        # Dragon Darts
-        if isConst?(move.id,PBMoves,:DRAGONDARTS) && @battle.pbSideSize(1)==2 && !b.fainted?
-          typeMod = move.pbCalcTypeMod(move.calcType,user,b)
-          b.damageState.typeMod = typeMod
-          if move.pbImmunityByAbility(user,b) || # Immunity because of ability
-             PBTypes.ineffective?(typeMod) || # Type immunity
-             # Being protected by a protection move
-             b.pbOwnSide.effects[PBEffects::WideGuard] || b.pbOwnSide.effects[PBEffects::QuickGuard] ||
-             b.effects[PBEffects::Protect]             || b.effects[PBEffects::KingsShield] ||
-             b.effects[PBEffects::SpikyShield]         || b.effects[PBEffects::BanefulBunker] ||
-             b.pbOwnSide.effects[PBEffects::MatBlock]  ||
-             b.semiInvulnerable? || # Being in the semi-invulnerable turn of a move
-             move.pbAccuracyCheck(user,b) # If it'd miss due to the user's accuracy or the target's evasion
-            choice[3]=b.opposes?(user) && b.index!=b
-            if !pbSuccessCheckAgainstTarget(move,user,b)
-              b.damageState.unaffected = true
-            end
-          end
-        else#
-          if !pbSuccessCheckAgainstTarget(move,user,b)
-            b.damageState.unaffected = true
-          end
-        end#
       end
       # Magic Coat/Magic Bounce checks (for moves which don't target Pokémon)
       if targets.length==0 && move.canMagicCoat?
