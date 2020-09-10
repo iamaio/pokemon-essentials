@@ -131,7 +131,6 @@ class PokeBattle_Battler
   end
 
   def pbCanLowerStatStage?(stat,user=nil,move=nil,showFailMsg=false,ignoreContrary=false)
-    effects[PBEffects::LashOut] = true
     return false if fainted?
     # Contrary
     if hasActiveAbility?(:CONTRARY) && !ignoreContrary && !@battle.moldBreaker
@@ -209,6 +208,7 @@ class PokeBattle_Battler
     if abilityActive?
       BattleHandlers.triggerAbilityOnStatLoss(@ability,self,stat,user)
     end
+    effects[PBEffects::LashOut] = true
     return true
   end
 
