@@ -74,12 +74,16 @@ class PokeBattle_Battler
     if hasActiveAbility?(:MIRRORARMOR) && (!user || user.index!=@index) && !@battle.moldBreaker
       battle.pbShowAbilitySplash(self)
       @battle.pbDisplay(_INTL("{1}'s Mirror Armor activated!",pbThis))
+      if !user
+        battle.pbHideAbilitySplash(self)
+        return false 
+      end
       if user.pbCanLowerStatStage?(stat) && !user.hasActiveAbility?(:MIRRORARMOR)
         user.pbLowerStatStageByAbility(stat,increment,user,splashAnim=false,checkContact=false)
       end
       battle.pbHideAbilitySplash(self)
       return false
-    end
+    end   
     # Perform the stat stage change
     increment = pbRaiseStatStageBasic(stat,increment,ignoreContrary)
     return false if increment<=0

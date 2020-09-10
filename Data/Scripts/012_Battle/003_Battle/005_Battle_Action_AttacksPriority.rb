@@ -164,6 +164,7 @@ class PokeBattle_Battle
                !b.airborne?
               pri+=1
             end
+            bArray[3] = pri
             @choices[b.index][4] = pri
           end
           # Calculate sub-priority (first/last within priority bracket)
