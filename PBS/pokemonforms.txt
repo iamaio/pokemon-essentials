@@ -1655,7 +1655,7 @@ EggMoves = THRASH,DOUBLEKICK,HYPNOSIS,DOUBLEEDGE,HORNDRILL,MORNINGSUN
 Height = 0.8
 Weight = 24.0
 Color = White
-BattlerPlayerY = 21
+Pokedex = This Pokémon will look into your eyes and read the contents of your heart. If it finds evil there, it promptly hides away.
 #-------------------------------
 [RAPIDASH-1]
 FormName = Galar Form
@@ -1666,8 +1666,7 @@ HiddenAbility = ANTICIPATION
 Moves = 0,PSYCHOCUT,1,PSYCHOCUT,1,MEGAHORN,1,TACKLE,1,QUICKATTACK,1,GROWL,1,TAILWHIP,1,CONFUSION,15,FAIRYWIND,20,AGILITY,25,PSYBEAM,30,STOMP,35,HEALPULSE,43,TAKEDOWN,49,DAZZLINGGLEAM,56,PSYCHIC,63,HEALINGWISH
 Weight = 80.0
 Color = White
-BattlerPlayerY = 12
-BattlerEnemyY = 13
+Pokedex = Brave and prideful, this Pokémon dashes airily through the forest, its steps aided by the psychic power stored in the fur on its fetlocks.
 #-------------------------------
 [SLOWPOKE-2]
 FormName = Galar Form
@@ -1675,7 +1674,7 @@ Type1 = PSYCHIC
 Abilities = GLUTTONY,OWNTEMPO
 HiddenAbility = REGENERATOR
 Moves = 1,TACKLE,1,CURSE,3,GROWL,6,ACID,9,YAWN,12,CONFUSION,15,DISABLE,18,WATERPULSE,21,HEADBUTT,24,ZENHEADBUTT,27,AMNESIA,30,SURF,33,SLACKOFF,36,PSYCHIC,39,PSYCHUP,42,RAINDANCE,45,HEALPULSE
-BattlerEnemyY = 30
+Pokedex = Because Galarian Slowpoke eat the seeds of a plant that grows only in Galar, their tails have developed a spicy flavor.
 #-------------------------------
 [FARFETCHD-1]
 FormName = Galar Form
@@ -1687,9 +1686,8 @@ Moves = 1,PECK,1,SANDATTACK,5,LEER,10,FURYCUTTER,15,ROCKSMASH,20,BRUTALSWING,25,
 EggMoves = COUNTER,QUICKATTACK,FLAIL,QUICKGUARD,CURSE,COVET,NIGHTSLASH,SIMPLEBEAM,DOUBLEEDGE,FEINT,SKYATTACK
 Weight = 42.0
 WildItemCommon = LEEK
-BattlerPlayerY = 24
-BattlerEnemyY = 28
 Evolutions = 
+Pokedex = The stalks of leeks are thicker and longer in the Galar region. Farfetch'd that adapted to these stalks took on a unique form.
 #-------------------------------
 [WEEZING-1]
 FormName = Galar Form
@@ -1702,8 +1700,7 @@ Height = 3.0
 Weight = 16.0
 Color = Gray
 WildItemUncommon = MISTYSEED
-BattlerPlayerY = 2
-BattlerEnemyY = 6
+Pokedex = Long ago, during a time when droves of factories fouled the air with pollution, Weezing changed into this form for some reason.
 #-------------------------------
 [MRMIME-1]
 FormName = Galar Form
@@ -1719,6 +1716,7 @@ Weight = 56.8
 Color = White
 BattlerEnemyY = 25
 Evolutions = MRRIME,Level,42
+Pokedex = It can radiate chilliness from the bottoms of its feet. It'll spend the whole day tap-dancing on a frozen floor.
 #-------------------------------
 [CORSOLA-1]
 FormName = Galar Form
@@ -1732,6 +1730,7 @@ EggMoves = HAZE,CONFUSERAY,NATUREPOWER,DESTINYBOND,WATERPULSE,HEADSMASH
 Weight = 0.5
 Color = White
 Evolutions = CURSOLA,Level,38
+Pokedex = Sudden climate change wiped out this ancient kind of Corsola. This Pokémon absorbs others' life-force through its branches.
 #-------------------------------
 [ZIGZAGOON-1]
 FormName = Galar Form
@@ -1740,6 +1739,8 @@ Type2 = NORMAL
 Moves = 1,TACKLE,1,LEER,3,SANDATTACK,6,LICK,9,SNARL,12,HEADBUTT,15,BABYDOLLEYES,18,PINMISSILE,21,REST,24,TAKEDOWN,27,SCARYFACE,30,COUNTER,33,TAUNT,36,DOUBLEEDGE
 EggMoves = PARTINGSHOT,QUICKGUARD,KNOCKOFF
 Color = White
+Evolutions = LINOONE,Level,20
+Pokedex = Thought to be the oldest form of Zigzagoon, it moves in zigzags and wreaks havoc upon its surroundings.
 #-------------------------------
 [LINOONE-1]
 FormName = Galar Form
@@ -1747,6 +1748,7 @@ Type1 = DARK
 Type2 = NORMAL
 Moves = 1,NIGHTSLASH,1,SWITCHEROO,1,PINMISSILE,1,BABYDOLLEYES,1,TACKLE,1,LEER,1,SANDATTACK,1,LICK,9,SNARL,12,HEADBUTT,15,HONECLAWS,18,FURYSWIPES,23,REST,28,TAKEDOWN,33,SCARYFACE,38,COUNTER,43,TAUNT,48,DOUBLEEDGE
 Evolutions = OBSTAGOON,LevelNight,35
+Pokedex = This very aggressive Pokémon will recklessly challenge opponents stronger than itself.
 #-------------------------------
 [DARUMAKA-1]
 FormName = Galar Form
@@ -1756,6 +1758,8 @@ EggMoves = FOCUSPUNCH,HAMMERARM,TAKEDOWN,FLAMEWHEEL,YAWN,FREEZEDRY,INCINERATE,PO
 Height = 0.7
 Weight = 40.0
 Color = White
+Evolutions = DARMANITAN,Item,ICESTONE
+Pokedex = The colder they get, the more energetic they are. They freeze their breath to make snowballs, using them as ammo for playful snowball fights.
 #-------------------------------
 [DARMANITAN-2]
 FormName = Galar Form
@@ -1766,6 +1770,7 @@ Moves = 0,ICICLECRASH,1,ICICLECRASH,1,POWDERSNOW,1,TACKLE,1,TAUNT,1,BITE,12,AVAL
 Height = 1.7
 Weight = 120.0
 Color = White
+Pokedex = Though it has a gentle disposition, it's also very strong. It will quickly freeze the snowball on its head before going for a headbutt.
 #-------------------------------
 [DARMANITAN-3]
 FormName = Galar Form Zen Mode
@@ -1780,8 +1785,7 @@ Moves = 0,ICICLECRASH,1,ICICLECRASH,1,POWDERSNOW,1,TACKLE,1,TAUNT,1,BITE,12,AVAL
 Height = 1.7
 Weight = 120.0
 Color = White
-BattlerPlayerY = 27
-BattlerEnemyY = 30
+Pokedex = Darmanitan takes this form when enraged. It won't stop spewing flames until its rage has settled, even if its body starts to melt.
 #-------------------------------
 [YAMASK-1]
 FormName = Galar Form
@@ -1791,6 +1795,7 @@ BaseStats = 38,55,85,30,30,65
 Abilities = WANDERINGSPIRIT
 Moves = 1,ASTONISH,1,PROTECT,4,HAZE,8,NIGHTSHADE,12,DISABLE,16,BRUTALSWING,20,CRAFTYSHIELD,24,HEX,28,MEANLOOK,32,SLAM,36,CURSE,40,SHADOWBALL,44,EARTHQUAKE,48,POWERSPLIT,48,GUARDSPLIT,52,DESTINYBOND
 Evolutions = 
+Pokedex = It's said that this Pokémon was formed when an ancient clay tablet was drawn to a vengeful spirit.
 #-------------------------------
 [STUNFISK-1]
 FormName = Galar Form
@@ -1803,30 +1808,35 @@ Moves = 1,MUDSLAP,1,TACKLE,1,WATERGUN,1,METALCLAW,5,ENDURE,10,MUDSHOT,15,REVENGE
 EggMoves = BIND,YAWN,ASTONISH,CURSE,SPITE,COUNTER,PAINSPLIT,REFLECTTYPE
 Weight = 20.5
 Color = Green
+Pokedex = Its conspicuous lips lure prey in as it lies in wait in the mud. When prey gets close, Stunfisk clamps its jagged steel fins down on them.
 #-------------------------------
 [CRAMORANT-1]
 FormName = Gulping Form
+Pokedex = The slightest shock is sometimes enough to get this Pokémon to spit out the Arrokuda lodged in its throat.
 #-------------------------------
 [CRAMORANT-2]
 FormName = Gorging Form
+Pokedex = The half-swallowed Pikachu is so startled that it isn't struggling yet, but it's still looking for a chance to strike back.
 #-------------------------------
 [TOXTRICITY-1]
 FormName = Low Key Form
 Abilities = PUNKROCK,MINUS
 Moves = 0,SPARK,1,SPARK,1,EERIEIMPULSE,1,BELCH,1,TEARFULLOOK,1,NUZZLE,1,GROWL,1,FLAIL,1,ACID,1,THUNDERSHOCK,1,ACIDSPRAY,1,LEER,1,NOBLEROAR,4,CHARGE,8,SHOCKWAVE,12,SCARYFACE,16,TAUNT,20,VENOMDRENCH,24,SCREECH,28,SWAGGER,32,TOXIC,36,DISCHARGE,40,POISONJAB,44,OVERDRIVE,48,BOOMBURST,52,MAGNETICFLUX
+Pokedex = It has an electrical organ on its chest. While generating electricity, it fills its surroundings with what sounds like the strumming of a bass guitar.
 #-------------------------------
 [SINISTEA-1]
 FormName = Antique Form
 Evolutions = POLTEAGEIST,Item,CHIPPEDPOT
-Pokedex=It absorbs the life-force of those who drink it. It waits patiently, but opportunities are fleeting—it tastes so bad that it gets spat out immediately.
+Pokedex = It absorbs the life-force of those who drink it. It waits patiently, but opportunities are fleeting—it tastes so bad that it gets spat out immediately.
 #-------------------------------
 [POLTEAGEIST-1]
 FormName = Antique Form
-Pokedex=Trainers Polteageist trusts will be allowed to experience its distinctive flavor and aroma firsthand by sampling just a tiny bit of its tea.
+Pokedex = Trainers Polteageist trusts will be allowed to experience its distinctive flavor and aroma firsthand by sampling just a tiny bit of its tea.
 #-------------------------------
 [EISCUE-1]
 FormName = Noice Face
 BaseStats = 75,80,70,130,65,50
+Pokedex = The hair on its head connects to the surface of its brain. When this Pokémon has something on its mind, its hair chills the air around it.
 #-------------------------------
 [INDEEDEE-1]
 FormName = Female
@@ -1836,9 +1846,11 @@ Abilities = OWNTEMPO,SYNCHRONIZE
 HiddenAbility = PSYCHICSURGE
 Moves = 1,STOREDPOWER,1,PLAYNICE,5,BATONPASS,10,DISARMINGVOICE,15,PSYBEAM,20,HELPINGHAND,25,FOLLOWME,30,AROMATHERAPY,35,PSYCHIC,40,CALMMIND,45,GUARDSPLIT,50,PSYCHICTERRAIN,55,HEALINGWISH
 EggMoves = PSYCHUP,FAKEOUT,PSYCHOSHIFT,HEALPULSE
+Pokedex = They diligently serve people and Pokémon so they can gather feelings of gratitude. The females are particularly good at babysitting.
 #-------------------------------
 [MORPEKO-1]
 FormName = Hangry Mode
+Pokedex = Hunger hormones affect its temperament. Until its hunger is appeased, it gets up to all manner of evil deeds.
 #-------------------------------
 [ZACIAN-1]
 FormName = Crowned Sword
@@ -1847,6 +1859,7 @@ Type2 = STEEL
 BaseStats = 92,170,115,148,80,115
 BaseEXP = 360
 Weight = 355.0
+Pokedex = Now armed with a weapon it used in ancient times, this Pokémon needs only a single strike to fell even Gigantamax Pokémon.
 #-------------------------------
 [ZAMAZENTA-1]
 FormName = Crowned Shield
@@ -1855,6 +1868,7 @@ Type2 = STEEL
 BaseStats = 92,130,145,128,80,145
 BaseEXP = 360
 Weight = 785.0
+Pokedex = Now that it's equipped with its shield, it can shrug off impressive blows, including the attacks of Dynamax Pokémon.
 #-------------------------------
 [ETERNATUS-1]
 FormName = Eternamax Form
@@ -1863,6 +1877,7 @@ BaseEXP = 563
 Height = 100.0
 Weight = 0.1
 Shape = 2
+Pokedex = Infinite amounts of energy pour from this Pokémon's enlarged core, warping the surrounding space-time.
 #-------------------------------
 [URSHIFU-1]
 FormName = Rapid Strike Style
@@ -1870,12 +1885,26 @@ Type1 = FIGHTING
 Type2 = WATER
 Moves = 0,SURGINGSTRIKES,1,SURGINGSTRIKES,1,AQUAJET,1,LEER,1,ROCKSMASH,1,ENDURE,1,FOCUSENERGY,12,AERIALACE,16,SCARYFACE,20,HEADBUTT,24,BRICKBREAK,28,DETECT,32,BULKUP,36,IRONHEAD,40,DYNAMICPUNCH,44,COUNTER,48,CLOSECOMBAT,52,FOCUSPUNCH
 Pokedex = It's believed that this Pokémon modeled its fighting style on the flow of a river - sometimes rapid, sometimes calm.
-BattlerPlayerY = 33
-BattlerEnemyY = 37
+Pokedex = This form of Urshifu is a strong believer in defeating foes by raining many blows down on them. Its strikes are nonstop, flowing like a river.
 #-------------------------------
 [ZARUDE-1]
 FormName = Dada Form
 Pokedex = This Zarude's special strength stems from its love and care for an orphaned human child that the Pokémon has raised since the child's infancy.
+#-------------------------------
+[MEOWTH-2]
+FormName=Galar Form
+Type1=STEEL
+BaseStats=50,65,55,40,40,40
+EffortPoints=0,1,0,0,0,0
+Abilities=PICKUP,TOUGHCLAWS
+HiddenAbility=UNNERVE
+Moves=1,FAKEOUT,1,GROWL,4,HONECLAWS,8,SCRATCH,12,PAYDAY,16,METALCLAW,20,TAUNT,24,SWAGGER,29,FURYSWIPES,32,SCREECH,36,SLASH,40,METALSOUND,44,THRASH
+EggMoves=SPITE,DOUBLEEDGE,CURSE,FLAIL,NIGHTSLASH,COVET
+Weight=7.5
+Color=Brown
+WildItemUncommon=
+Evolutions=PERRSERKER,Level,28
+Pokedex = These daring Pokémon have coins on their foreheads. Darker coins are harder, and harder coins garner more respect among Meowth.
 #-------------------------------
 [ALCREMIE-1]
 FormName = Strawberry Ruby Cream
