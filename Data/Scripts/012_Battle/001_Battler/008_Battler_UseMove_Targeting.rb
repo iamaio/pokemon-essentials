@@ -36,7 +36,14 @@ class PokeBattle_Battler
     preTarget = choice[3]   # A target that was already chosen
     targets = []
     # Get list of targets
-    case move.pbTarget(user)   # Curse can change its target type
+    targeting = move.pbTarget(user)
+    # Expanding Force
+    if move.function == "192" &&
+       @battle.field.terrain == PBBattleTerrains::Psychic &&
+       !user.airborne?
+      targeting = PBTargets::AllNearFoes
+    end
+    case targeting   # Curse can change its target type
     when PBTargets::NearAlly
       targetBattler = (preTarget>=0) ? @battle.battlers[preTarget] : nil
       if !pbAddTarget(targets,user,targetBattler,move)
@@ -93,6 +100,9 @@ class PokeBattle_Battler
     return targets if @battle.switching   # For Pursuit interrupting a switch
     return targets if move.cannotRedirect?
     return targets if !PBTargets.canChooseOneFoeTarget?(targetType) || targets.length!=1
+    # Stalwart / Propeller Tail
+    return targets if user.hasActiveAbility?(:STALWART) || user.hasActiveAbility?(:PROPELLERTAIL)
+	return targets if isConst?(move.id,PBMoves,:SNIPESHOT)
     priority = @battle.pbPriority(true)
     nearOnly = !PBTargets.canChooseDistantTarget?(move.target)
     # Spotlight (takes priority over Follow Me/Rage Powder/Lightning Rod/Storm Drain)

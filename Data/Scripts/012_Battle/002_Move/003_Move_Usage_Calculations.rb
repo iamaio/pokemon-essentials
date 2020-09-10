@@ -219,7 +219,7 @@ class PokeBattle_Move
 
   def pbCalcDamage(user,target,numTargets=1)
     return if statusMove?
-    if target.damageState.disguise
+    if target.damageState.disguise || target.damageState.iceface
       target.damageState.calcDamage = 1
       return
     end
@@ -324,6 +324,10 @@ class PokeBattle_Move
       if @battle.field.effects[PBEffects::MudSportField]>0
         multipliers[BASE_DMG_MULT] /= 3
       end
+    end
+    # Tar Shot
+    if target.effects[PBEffects::TarShot] && isConst?(type,PBTypes,:FIRE)
+      multipliers[BASE_DMG_MULT] *= 2
     end
     # Water Sport
     if isConst?(type,PBTypes,:FIRE)

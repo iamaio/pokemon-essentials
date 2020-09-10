@@ -107,6 +107,10 @@ class PokeBattle_Battler
 
   def pbEndTurn(_choice)
     @lastRoundMoved = @battle.turnCount   # Done something this round
+    # Gorilla Tactics
+    if @effects[PBEffects::GorillaTactics]<0 && @lastMoveUsed>=0 && hasActiveAbility?(:GORILLATACTICS)
+      @effects[PBEffects::GorillaTactics]=@lastMoveUsed
+    end
     if @effects[PBEffects::ChoiceBand]<0 &&
        hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF])
       if @lastMoveUsed>=0 && pbHasMove?(@lastMoveUsed)
@@ -358,8 +362,8 @@ class PokeBattle_Battler
         end
       end
     end
-    # Protean
-    if user.hasActiveAbility?(:PROTEAN) && !move.callsAnotherMove? && !move.snatched
+    # Protean / Libero
+    if user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO) && !move.callsAnotherMove? && !move.snatched
       if user.pbHasOtherType?(move.calcType) && !PBTypes.isPseudoType?(move.calcType)
         @battle.pbShowAbilitySplash(user)
         user.pbChangeTypes(move.calcType)
@@ -367,9 +371,9 @@ class PokeBattle_Battler
         @battle.pbDisplay(_INTL("{1} transformed into the {2} type!",user.pbThis,typeName))
         @battle.pbHideAbilitySplash(user)
         # NOTE: The GF games say that if Curse is used by a non-Ghost-type
-        #       Pokémon which becomes Ghost-type because of Protean, it should
-        #       target and curse itself. I think this is silly, so I'm making it
-        #       choose a random opponent to curse instead.
+        #       Pokémon which becomes Ghost-type because of Protean / Libero,
+        #       it should target and curse itself. I think this is silly, so
+        #       I'm making it choose a random opponent to curse instead.
         if move.function=="10D" && targets.length==0   # Curse
           choice[3] = -1
           targets = pbFindTargets(choice,move,user)
@@ -392,9 +396,29 @@ class PokeBattle_Battler
       targets.each do |b|
         b.damageState.reset
         b.damageState.initialHP = b.hp
-        if !pbSuccessCheckAgainstTarget(move,user,b)
-          b.damageState.unaffected = true
-        end
+        # Dragon Darts
+        if isConst?(move.id,PBMoves,:DRAGONDARTS) && @battle.pbSideSize(1)==2 && !b.fainted?
+          typeMod = move.pbCalcTypeMod(move.calcType,user,b)
+          b.damageState.typeMod = typeMod
+          if move.pbImmunityByAbility(user,b) || # Immunity because of ability
+             PBTypes.ineffective?(typeMod) || # Type immunity
+             # Being protected by a protection move
+             b.pbOwnSide.effects[PBEffects::WideGuard] || b.pbOwnSide.effects[PBEffects::QuickGuard] ||
+             b.effects[PBEffects::Protect]             || b.effects[PBEffects::KingsShield] ||
+             b.effects[PBEffects::SpikyShield]         || b.effects[PBEffects::BanefulBunker] ||
+             b.pbOwnSide.effects[PBEffects::MatBlock]  ||
+             b.semiInvulnerable? || # Being in the semi-invulnerable turn of a move
+             move.pbAccuracyCheck(user,b) # If it'd miss due to the user's accuracy or the target's evasion
+            choice[3]=b.opposes?(user) && b.index!=b
+            if !pbSuccessCheckAgainstTarget(move,user,b)
+              b.damageState.unaffected = true
+            end
+          end
+        else#
+          if !pbSuccessCheckAgainstTarget(move,user,b)
+            b.damageState.unaffected = true
+          end
+        end#
       end
       # Magic Coat/Magic Bounce checks (for moves which don't target Pokémon)
       if targets.length==0 && move.canMagicCoat?

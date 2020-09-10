@@ -2013,9 +2013,11 @@ class PokeBattle_Move_063 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE
     ]
   end
 
@@ -2070,9 +2072,11 @@ class PokeBattle_Move_064 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE
     ]
   end
 
@@ -2126,9 +2130,11 @@ class PokeBattle_Move_065 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE
     ]
     @abilityBlacklistUngainable = [
        # Replaces self with another ability
@@ -2146,14 +2152,18 @@ class PokeBattle_Move_065 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Appearance-changing abilities
        :ILLUSION,
        :IMPOSTER,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
        :RKSSYSTEM,
+       :GULPMISSILE,
        # Abilities that would be overpowered if allowed to be transferred
-       :WONDERGUARD
+       :WONDERGUARD,
+       # Abilities that are plain old blocked.
+       :NEUTRALIZINGGAS
     ]
   end
 
@@ -2213,9 +2223,11 @@ class PokeBattle_Move_066 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE
     ]
     @abilityBlacklistUngainable = [
        # Replaces self with another ability
@@ -2233,12 +2245,16 @@ class PokeBattle_Move_066 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Appearance-changing abilities
        :ILLUSION,
        :IMPOSTER,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE,
+       # Abilities that are plain old blocked.
+       :NEUTRALIZINGGAS
     ]
   end
 
@@ -2298,9 +2314,13 @@ class PokeBattle_Move_067 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE,
+       # Abilities that are plain old blocked.
+       :NEUTRALIZINGGAS
     ]
     @abilityBlacklistUngainable = [
        # Form-changing abilities
@@ -2314,14 +2334,18 @@ class PokeBattle_Move_067 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Appearance-changing abilities
        :ILLUSION,
        :IMPOSTER,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
        :RKSSYSTEM,
+       :GULPMISSILE,
        # Abilities that would be overpowered if allowed to be transferred
-       :WONDERGUARD
+       :WONDERGUARD,
+       # Abilities that are plain old blocked.
+       :NEUTRALIZINGGAS
     ]
   end
 
@@ -2412,9 +2436,11 @@ class PokeBattle_Move_068 < PokeBattle_Move
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
+       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM
+       :RKSSYSTEM,
+       :GULPMISSILE
     ]
   end
 
@@ -2728,6 +2754,15 @@ class PokeBattle_Move_075 < PokeBattle_Move
   def pbModifyDamage(damageMult,user,target)
     damageMult *= 2 if target.inTwoTurnAttack?("0CB")   # Dive
     return damageMult
+  end
+
+  def pbEffectAfterAllHits(user,target)
+    if isConst?(user.species,PBSpecies,:CRAMORANT) &&
+      user.hasActiveAbility?(:GULPMISSILE) && user.form==0
+      user.form=2
+      user.form=1 if user.hp>(user.totalhp/2)
+      @battle.scene.pbChangePokemon(user,user.pokemon)
+    end
   end
 end
 

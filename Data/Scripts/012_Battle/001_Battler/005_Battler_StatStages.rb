@@ -60,6 +60,7 @@ class PokeBattle_Battler
     if abilityActive?
       BattleHandlers.triggerAbilityOnStatGain(@ability,self,stat,user)
     end
+    @effects[PBEffects::BurningJealousy] = true
     return true
   end
 
@@ -68,6 +69,16 @@ class PokeBattle_Battler
     # Contrary
     if hasActiveAbility?(:CONTRARY) && !ignoreContrary && !@battle.moldBreaker
       return pbLowerStatStageByCause(stat,increment,user,cause,showAnim,true)
+    end
+    # Mirror Armor
+    if hasActiveAbility?(:MIRRORARMOR) && (!user || user.index!=@index) && !@battle.moldBreaker
+      battle.pbShowAbilitySplash(self)
+      @battle.pbDisplay(_INTL("{1}'s Mirror Armor activated!",pbThis))
+      if user.pbCanLowerStatStage?(stat) && !user.hasActiveAbility?(:MIRRORARMOR)
+        user.pbLowerStatStageByAbility(stat,increment,user,splashAnim=false,checkContact=false)
+      end
+      battle.pbHideAbilitySplash(self)
+      return false
     end
     # Perform the stat stage change
     increment = pbRaiseStatStageBasic(stat,increment,ignoreContrary)
@@ -116,6 +127,7 @@ class PokeBattle_Battler
   end
 
   def pbCanLowerStatStage?(stat,user=nil,move=nil,showFailMsg=false,ignoreContrary=false)
+    effects[PBEffects::LashOut] = true
     return false if fainted?
     # Contrary
     if hasActiveAbility?(:CONTRARY) && !ignoreContrary && !@battle.moldBreaker

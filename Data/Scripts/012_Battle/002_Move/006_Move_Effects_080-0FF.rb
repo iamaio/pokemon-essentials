@@ -1177,6 +1177,7 @@ class PokeBattle_Move_0AF < PokeBattle_Move
        "14B",   # King's Shield
        "14C",   # Spiky Shield
        "168",   # Baneful Bunker
+	   "203",   # Obstruct
        # Moves that call other moves
        "0AE",   # Mirror Move
        "0AF",   # Copycat (this move)
@@ -1495,6 +1496,7 @@ class PokeBattle_Move_0B5 < PokeBattle_Move
        "14B",   # King's Shield
        "14C",   # Spiky Shield
        "168",   # Baneful Bunker
+	   "203",   # Obstruct
        # Moves that call other moves
        "0AE",   # Mirror Move
        "0AF",   # Copycat
@@ -1618,6 +1620,7 @@ class PokeBattle_Move_0B6 < PokeBattle_Move
        "14B",   # King's Shield
        "14C",   # Spiky Shield
        "168",   # Baneful Bunker
+	   "203",   # Obstruct
        # Moves that call other moves
        "0AE",   # Mirror Move
        "0AF",   # Copycat
@@ -2183,6 +2186,12 @@ end
 class PokeBattle_Move_0CB < PokeBattle_TwoTurnMove
   def pbChargingTurnMessage(user,targets)
     @battle.pbDisplay(_INTL("{1} hid underwater!",user.pbThis))
+    if isConst?(user.species,PBSpecies,:CRAMORANT) &&
+      user.hasActiveAbility?(:GULPMISSILE) && user.form==0
+      user.form=2
+      user.form=1 if user.hp>(user.totalhp/2)
+      @battle.scene.pbChangePokemon(user,user.pokemon)
+    end    
   end
 end
 
