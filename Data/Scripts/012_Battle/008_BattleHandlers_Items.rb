@@ -1304,6 +1304,17 @@ BattleHandlers::UserItemAfterMoveUse.add(:SHELLBELL,
   }
 )
 
+BattleHandlers::UserItemAfterMoveUse.add(:THROATSPRAY,
+  proc { |item,user,targets,move,numHits,battle|
+    next if !move.soundMove?
+    next if !user.pbCanRaiseStatStage?(PBStats::SPATK,user)
+    battle.pbCommonAnimation("UseItem",user)
+    showAnim = true
+    user.pbRaiseStatStageByCause(PBStats::SPATK,1,user,user.itemName,showAnim)
+    user.pbConsumeItem
+  }
+)
+
 #===============================================================================
 # EndOfMoveItem handlers
 #===============================================================================
