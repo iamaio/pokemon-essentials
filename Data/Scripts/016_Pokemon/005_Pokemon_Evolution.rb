@@ -31,6 +31,7 @@ module PBEvolution
   LevelRain         = 29
   HappinessMoveType = 30
   LevelEvening      = 31
+  CriticalHits      = 32
 
   EVONAMES = ["None",
      "Happiness",    "HappinessDay", "HappinessNight",   "Level",         "Trade",
@@ -39,7 +40,7 @@ module PBEvolution
      "ItemMale",     "ItemFemale",   "DayHoldItem",      "NightHoldItem", "HasMove",
      "HasInParty",   "LevelMale",    "LevelFemale",      "Location",      "TradeSpecies",
      "LevelDay",     "LevelNight",   "LevelDarkInParty", "LevelRain",     "HappinessMoveType",
-     "LevelEvening"
+     "LevelEvening", "CriticalHits"
   ]
 
   @@evolution_methods = HandlerHash.new(:PBEvolution)
