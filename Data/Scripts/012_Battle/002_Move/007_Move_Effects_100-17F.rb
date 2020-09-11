@@ -2888,7 +2888,7 @@ class PokeBattle_Move_186 < PokeBattle_Move
   def pbMoveFailed?(user,targets)
     jglheal = 0
     for i in 0...targets.length
-      jglheal += 1 if (targets[i].hp == targets[i].totalhp || targets[i].canHeal?) && targets[i].status ==PBStatuses::NONE
+      jglheal += 1 if (targets[i].hp == targets[i].totalhp || !targets[i].canHeal?) && targets[i].status ==PBStatuses::NONE
     end
     if jglheal == targets.length 
       @battle.pbDisplay(_INTL("But it failed!"))
@@ -3047,11 +3047,12 @@ end
 # Poltergeist
 #===============================================================================
 class PokeBattle_Move_193 < PokeBattle_Move
-  def pbMoveFailed?(user,targets)
+  def pbFailsAgainstTarget?(user,target)
     if target.item!=0
       @battle.pbDisplay(_INTL("{1} is about to be attacked by its {2}!",target.pbThis,target.itemName))
       return false
     end
+    @battle.pbDisplay(_INTL("But it failed!"))
     return true
   end
 end

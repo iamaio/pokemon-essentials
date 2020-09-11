@@ -1028,7 +1028,7 @@ Abilities = ROCKHEAD,ADAPTABILITY
 Pokedex = Even Basculin, which devours everything it can with its huge jaws, is nothing more than food to organisms stronger than itself.
 WildItemUncommon = DEEPSEASCALE
 #-------------------------------
-[DARMANITAN,1]
+[DARMANITAN,2]
 FormName = Zen Mode
 Type1 = FIRE
 Type2 = PSYCHIC
@@ -1761,7 +1761,7 @@ Color = White
 Evolutions = DARMANITAN,Item,ICESTONE
 Pokedex = The colder they get, the more energetic they are. They freeze their breath to make snowballs, using them as ammo for playful snowball fights.
 #-------------------------------
-[DARMANITAN-2]
+[DARMANITAN-1]
 FormName = Galar Form
 Type1 = ICE
 Abilities = GORILLATACTICS

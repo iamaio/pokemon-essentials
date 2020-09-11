@@ -1041,7 +1041,6 @@ BattleHandlers::TargetItemOnHit.add(:ENIGMABERRY,
     next if target.damageState.substitute || target.damageState.disguise || target.damageState.iceface
     next if !PBTypes.superEffective?(target.damageState.typeMod)
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
-    target.pbConsumeItem
   }
 )
 
@@ -1072,7 +1071,6 @@ BattleHandlers::TargetItemOnHit.add(:KEEBERRY,
   proc { |item,user,target,move,battle|
     next if !move.physicalMove?
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
-    target.pbConsumeItem
   }
 )
 
@@ -1095,7 +1093,6 @@ BattleHandlers::TargetItemOnHit.add(:MARANGABERRY,
   proc { |item,user,target,move,battle|
     next if !move.specialMove?
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
-    target.pbConsumeItem
   }
 )
 

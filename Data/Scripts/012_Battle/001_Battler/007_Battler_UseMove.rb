@@ -396,6 +396,9 @@ class PokeBattle_Battler
       targets.each do |b|
         b.damageState.reset
         b.damageState.initialHP = b.hp
+        if !pbSuccessCheckAgainstTarget(move,user,b)
+          b.damageState.unaffected = true
+        end
       end
       # Magic Coat/Magic Bounce checks (for moves which don't target Pokémon)
       if targets.length==0 && move.canMagicCoat?

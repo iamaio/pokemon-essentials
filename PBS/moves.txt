@@ -751,4 +751,4 @@
 730,CORROSIVEGAS,Corrosive Gas,201,0,POISON,Status,100,40,0,00,0,,"The user surrounds everything around it with highly acidic gas and melts away items they hold."
 731,COACHING,Coaching,189,0,FIGHTING,Status,0,10,0,100,0,,"The user properly coaches its ally Pokémon, boosting their Attack and Defense stats."
 733,DUALWINGBEAT,Dual Wingbeat,0BD,40,FLYING,Physical,90,10,0,00,0,abef,"The user slams the target with its wings. The target is hit twice in a row."
-734,JUNGLEHEALING,Jungle Healing,186,0,GRASS,Status,0,10,0,10,0,,"The user becomes one with the jungle, restoring HP and healing any status conditions of itself and its ally Pokémon in battle."
+734,JUNGLEHEALING,Jungle Healing,186,0,GRASS,Status,0,10,0,5,0,,"The user becomes one with the jungle, restoring HP and healing any status conditions of itself and its ally Pokémon in battle."

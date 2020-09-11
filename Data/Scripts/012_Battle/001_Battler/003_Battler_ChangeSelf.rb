@@ -293,17 +293,19 @@ class PokeBattle_Battler
     # Form changes upon entering battle and when the weather changes
     pbCheckFormOnWeatherChange if !endOfRound
     # Darmanitan - Zen Mode
-    if isSpecies?(:DARMANITAN) && isConst?(@ability,PBAbilities,:ZENMODE)
+    if isConst?(@species,PBSpecies,:DARMANITAN) && isConst?(@ability,PBAbilities,:ZENMODE)
       if @hp<=@totalhp/2
-        if @form!=1
+        if @form!=2 && @form!=3
           @battle.pbShowAbilitySplash(self,true)
           @battle.pbHideAbilitySplash(self)
-          pbChangeForm(1,_INTL("{1} triggered!",abilityName))
+          pbChangeForm(2,_INTL("{1} triggered!",abilityName)) if @form == 0
+          pbChangeForm(3,_INTL("{1} triggered!",abilityName)) if @form == 1
         end
-      elsif @form!=0
+      elsif @form!=0 && @form != 1
         @battle.pbShowAbilitySplash(self,true)
         @battle.pbHideAbilitySplash(self)
-        pbChangeForm(0,_INTL("{1} triggered!",abilityName))
+        pbChangeForm(0,_INTL("{1} triggered!",abilityName)) if @form == 2
+        pbChangeForm(1,_INTL("{1} triggered!",abilityName)) if @form == 3
       end
     end
     # Minior - Shields Down
