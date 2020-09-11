@@ -604,6 +604,14 @@ class PokeBattle_Battler
         end
         move.pbCrashDamage(user)
         user.pbItemHPHealCheck
+        # Blunder Policy
+        if user.hasActiveItem?(:BLUNDERPOLICY) && user.effects[PBEffects::BlunderPolicy] && 
+           targets[0].effects[PBEffects::TwoTurnAttack]==0 && move.function!="070" && hitNum==0
+          if user.pbCanRaiseStatStage?(PBStats::SPEED,user,self) 
+            pbRaiseStatStageByCause(PBStats::SPEED,2,user,itemName,showAnim=true,ignoreContrary=false)
+            user.pbConsumeItem
+          end
+        end   
         pbCancelMoves
         return false
       end

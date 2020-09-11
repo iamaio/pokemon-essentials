@@ -110,8 +110,10 @@ class PokeBattle_Move
     accuracy = (accuracy * modifiers[ACC_MULT] / 0x1000).round
     evasion  = (evasion  * modifiers[EVA_MULT] / 0x1000).round
     evasion = 1 if evasion<1
-    # Calculation
-    return @battle.pbRandom(100) < modifiers[BASE_ACC] * accuracy / evasion
+    # Calculation/Blunder Policy
+    ret = @battle.pbRandom(100) < modifiers[BASE_ACC] * accuracy / evasion
+    user.effects[PBEffects::BlunderPolicy]=true if !ret
+    return ret
   end
 
   def pbCalcAccuracyModifiers(user,target,modifiers)

@@ -140,7 +140,7 @@ class PokeBattle_Battler
       @effects[PBEffects::Telekinesis]       = 0
       @effects[PBEffects::JawLock]           = false
       @effects[PBEffects::JawLockUser]       = -1 
-	    @effects[PBEffects::NoRetreat]         = false
+	  @effects[PBEffects::NoRetreat]         = false
     end
     @damageState.reset
     @fainted               = (@hp==0)
@@ -300,7 +300,8 @@ class PokeBattle_Battler
     @effects[PBEffects::LashOut]             = false
     @effects[PBEffects::BurningJealousy]     = false 
 	@effects[PBEffects::Obstruct]            = false
-	@effects[PBEffects::TarShot]          = false
+	@effects[PBEffects::TarShot]             = false
+	@effects[PBEffects::BlunderPolicy]       = false
   end
 
   #=============================================================================

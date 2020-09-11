@@ -128,6 +128,7 @@ begin
     TarShot             = 124
     Octolock            = 125
     OctolockUser        = 126
+    BlunderPolicy       = 127
 	
     #===========================================================================
     # These effects apply to a battler position
