@@ -107,6 +107,13 @@ class PokeBattle_Battler
     @statusCount = value
     @pokemon.statusCount = value if @pokemon
   end
+  
+  attr_reader :criticalHits
+
+  def criticalHits=(value)
+    @criticalHits=value
+    @pokemon.criticalHits=value if @pokemon
+  end
 
   #=============================================================================
   # Properties from Pokémon

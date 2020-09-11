@@ -31,7 +31,7 @@ module PBEvolution
   LevelRain         = 29
   HappinessMoveType = 30
   LevelEvening      = 31
-  Custom1           = 32
+  CriticalHits      = 32
   Custom2           = 33
   Custom3           = 34
   Custom4           = 35
@@ -43,7 +43,7 @@ module PBEvolution
      "ItemMale",     "ItemFemale",   "DayHoldItem",      "NightHoldItem", "HasMove",
      "HasInParty",   "LevelMale",    "LevelFemale",      "Location",      "TradeSpecies",
      "LevelDay",     "LevelNight",   "LevelDarkInParty", "LevelRain",     "HappinessMoveType",
-     "LevelEvening", "Custom1",      "Custom2",          "Custom3",       "Custom4",
+     "LevelEvening", "CriticalHits", "Custom2",          "Custom3",       "Custom4",
   ]
 
   # 0 = no parameter
@@ -60,7 +60,7 @@ module PBEvolution
      2,2,2,2,3,    # ItemMale, ItemFemale, DayHoldItem, NightHoldItem, HasMove
      4,1,1,1,4,    # HasInParty, LevelMale, LevelFemale, Location, TradeSpecies
      1,1,1,1,5,    # LevelDay, LevelNight, LevelDarkInParty, LevelRain, HappinessMoveType
-     1,1,1,1,1     # LevelEvening, Custom 1-4
+     1,1,1,1,1     # LevelEvening, CriticalHits, Custom 2-4
   ]
 end
 
@@ -279,8 +279,8 @@ def pbMiniCheckEvolution(pokemon,evonib,level,poke)
     return poke if pokemon.beauty>=level
   when PBEvolution::Trade, PBEvolution::TradeItem, PBEvolution::TradeSpecies
     return -1
-  when PBEvolution::Custom1
-    # Add code for custom evolution type 1
+  when PBEvolution::CriticalHits
+    return poke if pokemon.criticalHits>=level
   when PBEvolution::Custom2
     # Add code for custom evolution type 2
   when PBEvolution::Custom3
