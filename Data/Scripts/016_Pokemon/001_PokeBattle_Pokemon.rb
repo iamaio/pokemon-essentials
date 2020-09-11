@@ -51,8 +51,6 @@ class PokeBattle_Pokemon
                              #    For information only, not used to verify
                              #    ownership of the Pokémon
   attr_writer   :cool,:beauty,:cute,:smart,:tough,:sheen   # Contest stats
-  
-  attr_accessor :criticalHits # evolution methods
 
   IV_STAT_LIMIT         = 31    # Max total IVs
   EV_LIMIT              = 510   # Max total EVs
@@ -808,11 +806,6 @@ class PokeBattle_Pokemon
     end
     @happiness += gain
     @happiness = [[255,@happiness].min,0].max
-  end
-  
-  def criticalHits
-    @criticalHits=0 if !@criticalHits 
-    return @criticalHits
   end
 
   #=============================================================================

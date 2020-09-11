@@ -587,17 +587,13 @@ def pbEvolutionCheck(currentLevels)
   for i in 0...currentLevels.length
     pkmn = $Trainer.party[i]
     next if !pkmn || (pkmn.hp==0 && !NEWEST_BATTLE_MECHANICS)
-    if (currentLevels[i] && pkmn.level==currentLevels[i]) || pkmn.criticalHits>0
-      next
-    end
+    next if currentLevels[i] && pkmn.level==currentLevels[i]
     newSpecies = pbCheckEvolution(pkmn)
-    if newSpecies>0
-      evo = PokemonEvolutionScene.new
-      evo.pbStartScreen(pkmn,newSpecies)
-      evo.pbEvolution
-      evo.pbEndScreen
-    end
-    pkmn.criticalHits=0
+    next if newSpecies<=0
+    evo = PokemonEvolutionScene.new
+    evo.pbStartScreen(pkmn,newSpecies)
+    evo.pbEvolution
+    evo.pbEndScreen
   end
 end
 
