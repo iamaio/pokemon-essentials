@@ -228,7 +228,9 @@ class PokeBattle_Move
     # Get the move's type
     type = @calcType   # -1 is treated as physical
     # Calculate whether this hit deals critical damage
-    target.damageState.critical = pbIsCritical?(user,target)
+    isCrit = pbIsCritical?(user,target)
+    target.damageState.critical = isCrit
+    user.criticalHits+=1 if isCrit
     # Calcuate base power of move
     baseDmg = pbBaseDamage(@baseDamage,user,target)
     # Calculate user's attack stat
