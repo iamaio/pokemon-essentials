@@ -21,7 +21,6 @@ class PokeBattle_Pokemon
   attr_accessor :moves       # Moves (PBMove)
   attr_accessor :firstmoves  # The moves known when this Pokémon was obtained
   attr_accessor :item        # Held item
-  attr_accessor :trmoves     # Technical Records
   attr_writer   :mail        # Mail
   attr_accessor :fused       # The Pokémon fused into this one
   attr_accessor :iv          # Array of 6 Individual Values for HP, Atk, Def,
@@ -51,6 +50,9 @@ class PokeBattle_Pokemon
                              #    For information only, not used to verify
                              #    ownership of the Pokémon
   attr_writer   :cool,:beauty,:cute,:smart,:tough,:sheen   # Contest stats
+  
+  attr_accessor :criticalHits # evolution methods
+  attr_accessor :yamaskhp # evolution methods  
 
   IV_STAT_LIMIT         = 31    # Max total IVs
   EV_LIMIT              = 510   # Max total EVs
@@ -618,11 +620,6 @@ class PokeBattle_Pokemon
     return ret
   end
 
-  def trmoves
-    @trmoves=[] if !@trmoves
-    return @trmoves
-  end
-  
   # Returns this Pokémon's mail.
   def mail
     return nil if !@mail
@@ -806,6 +803,15 @@ class PokeBattle_Pokemon
     end
     @happiness += gain
     @happiness = [[255,@happiness].min,0].max
+  end
+  
+  def criticalHits
+    @criticalHits=0 if !@criticalHits 
+    return @criticalHits
+  end
+  def yamaskhp
+    @yamaskhp=0 if !@yamaskhp
+    return @yamaskhp
   end
 
   #=============================================================================

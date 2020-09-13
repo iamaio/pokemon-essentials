@@ -7,7 +7,7 @@ class PokeBattle_DamageState
   attr_accessor :magicBounce
   attr_accessor :totalHPLost     # Like hpLost, but cumulative over all hits
   attr_accessor :fainted         # Whether battler was knocked out by the move
-
+  
   attr_accessor :missed          # Whether the move failed the accuracy check
   attr_accessor :calcDamage      # Calculated damage
   attr_accessor :hpLost          # HP lost by opponent, inc. HP lost by a substitute
@@ -17,9 +17,9 @@ class PokeBattle_DamageState
   attr_accessor :focusSash       # Focus Sash used
   attr_accessor :sturdy          # Sturdy ability used
   attr_accessor :disguise        # Disguise ability used
+  attr_accessor :iceface         # Ice Face ability used
   attr_accessor :endured         # Damage was endured
   attr_accessor :berryWeakened   # Whether a type-resisting berry was used
-  attr_accessor :iceface         # Ice Face ability used
 
   def initialize; reset; end
 
@@ -45,9 +45,9 @@ class PokeBattle_DamageState
     @focusSash     = false
     @sturdy        = false
     @disguise      = false
+    @iceface       = false
     @endured       = false
     @berryWeakened = false
-    @iceface       = false
   end
 end
 

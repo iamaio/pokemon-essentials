@@ -14,9 +14,9 @@ class PokeBattle_Battle
     return false if battler.effects[PBEffects::Trapping]>0 ||
                     battler.effects[PBEffects::MeanLook]>=0 ||
                     battler.effects[PBEffects::Ingrain] ||
-					battler.effects[PBEffects::JawLock] ||
-                    battler.effects[PBEffects::OctolockUser]>=0 ||
                     battler.effects[PBEffects::NoRetreat] ||
+                    battler.effects[PBEffects::JawLock] ||
+                    battler.effects[PBEffects::OctolockUser]>=0 ||
                     @field.effects[PBEffects::FairyLock]>0
     eachOtherSideBattler(idxBattler) do |b|
       return false if b.abilityActive? &&
@@ -38,7 +38,7 @@ class PokeBattle_Battle
     if battler.opposes?
       return 0 if trainerBattle?
       @choices[idxBattler][0] = :Run
-      @choices[idxBattler][1] = 0
+      @choices[idxBattler][1] = 0 
       @choices[idxBattler][2] = nil
       return -1
     end
@@ -100,8 +100,9 @@ class PokeBattle_Battle
       if battler.effects[PBEffects::Trapping]>0 ||
          battler.effects[PBEffects::MeanLook]>=0 ||
          battler.effects[PBEffects::Ingrain] ||
-         battler.effects[PBEffects::OctolockUser]>=0 ||
          battler.effects[PBEffects::NoRetreat] ||
+         battler.effects[PBEffects::JawLock] ||
+         battler.effects[PBEffects::OctolockUser]>=0 ||
          @field.effects[PBEffects::FairyLock]>0
         pbDisplayPaused(_INTL("You can't escape!"))
         return 0

@@ -88,6 +88,8 @@ class PokeBattle_Battler
     @status       = pkmn.status
     @statusCount  = pkmn.statusCount
     @pokemon      = pkmn
+    self.criticalHits = 0
+    self.yamaskhp = 0
     @pokemonIndex = idxParty
     @participants = []   # Participants earn Exp. if this battler is defeated
     @moves        = []
@@ -127,6 +129,7 @@ class PokeBattle_Battler
       @effects[PBEffects::GastroAcid]        = false
       @effects[PBEffects::HealBlock]         = 0
       @effects[PBEffects::Ingrain]           = false
+      @effects[PBEffects::NoRetreat]         = false
       @effects[PBEffects::LaserFocus]        = 0
       @effects[PBEffects::LeechSeed]         = -1
       @effects[PBEffects::LockOn]            = 0
@@ -138,8 +141,9 @@ class PokeBattle_Battler
       @effects[PBEffects::Substitute]        = 0
       @effects[PBEffects::Telekinesis]       = 0
       @effects[PBEffects::JawLock]           = false
-      @effects[PBEffects::JawLockUser]       = -1 
-	  @effects[PBEffects::NoRetreat]         = false
+      @effects[PBEffects::JawLockUser]       = -1
+      @effects[PBEffects::Octolock]          = false
+      @effects[PBEffects::OctolockUser]      = -1
     end
     @damageState.reset
     @fainted               = (@hp==0)
@@ -206,26 +210,24 @@ class PokeBattle_Battler
     @effects[PBEffects::Instruct]            = false
     @effects[PBEffects::Instructed]          = false
     @effects[PBEffects::KingsShield]         = false
+    @battle.eachBattler do |b|   # Other battlers lose their lock-on against self - Jawlock
+      next if !b.effects[PBEffects::JawLock]
+      next if b.effects[PBEffects::JawLockUser]!=@index
+      b.effects[PBEffects::Jawlock]     = false
+      b.effects[PBEffects::JawLockUser] = -1
+    end  
+    @battle.eachBattler do |b|   # Other battlers lose their lock-on against self - Octolock
+      next if !b.effects[PBEffects::Octolock]
+      next if b.effects[PBEffects::OctolockUser]!=@index
+      b.effects[PBEffects::Octolock]     = false
+      b.effects[PBEffects::OctolockUser] = -1
+    end      
     @battle.eachBattler do |b|   # Other battlers lose their lock-on against self
       next if b.effects[PBEffects::LockOn]==0
       next if b.effects[PBEffects::LockOnPos]!=@index
       b.effects[PBEffects::LockOn]    = 0
       b.effects[PBEffects::LockOnPos] = -1
     end
-    @effects[PBEffects::Octolock]     = false
-    @effects[PBEffects::OctolockUser] = -1
-    @battle.eachBattler do |b|   # Other battlers lose their lock-on against self - Octolock
-      next if !b.effects[PBEffects::Octolock]
-      next if b.effects[PBEffects::OctolockUser]!=@index
-      b.effects[PBEffects::Octolock]     = false
-      b.effects[PBEffects::OctolockUser] = -1
-    end   
-    @battle.eachBattler do |b|   # Other battlers lose their lock-on against self - Jawlock
-      next if !b.effects[PBEffects::JawLock]
-      next if b.effects[PBEffects::JawLockUser]!=@index
-      b.effects[PBEffects::Jawlock]     = false
-      b.effects[PBEffects::JawLockUser] = -1
-    end 
     @effects[PBEffects::MagicBounce]         = false
     @effects[PBEffects::MagicCoat]           = false
     @effects[PBEffects::MeanLook]            = -1
@@ -296,11 +298,15 @@ class PokeBattle_Battler
     @effects[PBEffects::Yawn]                = 0
     @effects[PBEffects::GorillaTactics]      = -1
     @effects[PBEffects::BallFetch]           = 0
+    @effects[PBEffects::PerishBody]          = 0
+    @effects[PBEffects::Obstruct]            = false
+    @effects[PBEffects::TarShot]             = false
     @effects[PBEffects::LashOut]             = false
     @effects[PBEffects::BurningJealousy]     = false 
-	@effects[PBEffects::Obstruct]            = false
-	@effects[PBEffects::TarShot]             = false
-	@effects[PBEffects::BlunderPolicy]       = false
+    @effects[PBEffects::BlunderPolicy]       = false
+
+
+
   end
 
   #=============================================================================

@@ -72,7 +72,7 @@ class PokeBattle_Battler
         next if b.status!=PBStatuses::FROZEN
         # NOTE: Non-Fire-type moves that thaw the user will also thaw the
         #       target (in Gen 6+).
-        if isConst?(move.calcType,PBTypes,:FIRE) ||
+        if isConst?(move.calcType,PBTypes,:FIRE) || 
            (NEWEST_BATTLE_MECHANICS && move.thawsUser?)
           b.pbCureStatus
         end
@@ -86,7 +86,7 @@ class PokeBattle_Battler
       dbName = @battle.battlers[user.effects[PBEffects::DestinyBondTarget]].pbThis
       @battle.pbDisplay(_INTL("{1} took its attacker down with it!",dbName))
       user.pbReduceHP(user.hp,false)
-      user.pbItemHPHealCheck
+      user.pbItemHPHealCheck 
       user.pbFaint
       @battle.pbJudgeCheckpoint(user)
     end
@@ -147,6 +147,15 @@ class PokeBattle_Battler
       next if !b.itemActive?
       BattleHandlers.triggerTargetItemAfterMoveUse(b.item,b,user,move,switchByItem,@battle)
     end
+    # EJECT PACK
+    @battle.pbPriority(true).each do |b|
+      next if !targets.any? { |targetB| targetB.index==b.index }
+      next if b.effects[PBEffects::LashOut] = false ||
+         switchedBattlers.include?(b.index)
+      next if !b.itemActive?
+      BattleHandlers.triggerItemOnStatLoss(b.item,b,user,move,switchByItem,@battle)
+    end
+    #
     @battle.moldBreaker = false if switchByItem.include?(user.index)
     @battle.pbPriority(true).each do |b|
       b.pbEffectsOnSwitchIn(true) if switchByItem.include?(b.index)

@@ -23,13 +23,11 @@ def pbGetRelearnableMoves(pokemon)
       tmoves.push(i) if !pokemon.hasMove?(i) && !moves.include?(i)
     end
   end
-  trmoves=[]
-  for i in pokemon.trmoves
-    trmoves.push(i) if !pokemon.hasMove?(i) && !moves.include?(i)
-  end
-  moves=tmoves+trmoves+moves
-  return moves|[]
+  moves=tmoves+moves
+  return moves|[]   # remove duplicates
 end
+
+
 
 ################################################################################
 # Scene class for handling appearance of the screen

@@ -68,12 +68,7 @@ end
 
 def pbIsMachine?(item)
   ret = pbGetItemData(item,ITEM_FIELD_USE)
-  return ret && (ret==3 || ret==4 || ret==6)
-end
-
-def pbIsTechnicalRecord?(item)
-  ret = pbGetItemData(item,ITEM_FIELD_USE)
-  return ret && ret==6
+  return ret && (ret==3 || ret==4)
 end
 
 def pbIsMail?(item)
@@ -214,8 +209,9 @@ def pbIsUnlosableItem?(item,species,ability)
      :KYOGRE   => [:BLUEORB],
      :GROUDON  => [:REDORB],
      :ZACIAN   => [:RUSTEDSWORD],   
-     :ZAMAZENTA=> [:RUSTEDSHIELD]
+     :ZAMAZENTA=> [:RUSTEDSHIELD]     
   }
+  ret = false
   combos.each do |comboSpecies, items|
     next if !isConst?(species,PBSpecies,comboSpecies)
     items.each { |i| return true if isConst?(item,PBItems,i) }
@@ -373,7 +369,11 @@ def pbChangeLevel(pkmn,newlevel,scene)
     pkmn.changeHappiness("vitamin")
     pkmn.calcStats
     scene.pbRefresh
-    pbMessage(_INTL("{1} grew to Lv. {2}!",pkmn.name,pkmn.level))
+    if scene.is_a?(PokemonPartyScreen)
+      scene.pbDisplay(_INTL("{1} grew to Lv. {2}!",pkmn.name,pkmn.level))
+    else
+      pbMessage(_INTL("{1} grew to Lv. {2}!",pkmn.name,pkmn.level))
+    end
     attackdiff  = pkmn.attack-attackdiff
     defensediff = pkmn.defense-defensediff
     speeddiff   = pkmn.speed-speeddiff
@@ -381,14 +381,14 @@ def pbChangeLevel(pkmn,newlevel,scene)
     spdefdiff   = pkmn.spdef-spdefdiff
     totalhpdiff = pkmn.totalhp-totalhpdiff
     pbTopRightWindow(_INTL("Max. HP<r>+{1}\r\nAttack<r>+{2}\r\nDefense<r>+{3}\r\nSp. Atk<r>+{4}\r\nSp. Def<r>+{5}\r\nSpeed<r>+{6}",
-       totalhpdiff,attackdiff,defensediff,spatkdiff,spdefdiff,speeddiff))
+       totalhpdiff,attackdiff,defensediff,spatkdiff,spdefdiff,speeddiff),scene)
     pbTopRightWindow(_INTL("Max. HP<r>{1}\r\nAttack<r>{2}\r\nDefense<r>{3}\r\nSp. Atk<r>{4}\r\nSp. Def<r>{5}\r\nSpeed<r>{6}",
-       pkmn.totalhp,pkmn.attack,pkmn.defense,pkmn.spatk,pkmn.spdef,pkmn.speed))
+       pkmn.totalhp,pkmn.attack,pkmn.defense,pkmn.spatk,pkmn.spdef,pkmn.speed),scene)
     # Learn new moves upon level up
     movelist = pkmn.getMoveList
     for i in movelist
       next if i[0]!=pkmn.level
-      pbLearnMove(pkmn,i[1],true)
+      pbLearnMove(pkmn,i[1],true) { scene.pbUpdate }
     end
     # Check for evolution
     newspecies = pbCheckEvolution(pkmn)
@@ -398,12 +398,13 @@ def pbChangeLevel(pkmn,newlevel,scene)
         evo.pbStartScreen(pkmn,newspecies)
         evo.pbEvolution
         evo.pbEndScreen
+        scene.pbRefresh if scene.is_a?(PokemonPartyScreen)
       }
     end
   end
 end
 
-def pbTopRightWindow(text)
+def pbTopRightWindow(text, scene = nil)
   window = Window_AdvancedTextPokemon.new(text)
   window.width = 198
   window.x     = Graphics.width-window.width
@@ -414,6 +415,7 @@ def pbTopRightWindow(text)
     Graphics.update
     Input.update
     window.update
+    scene.pbUpdate if scene    
     break if Input.trigger?(Input::C)
   end
   window.dispose
@@ -682,9 +684,8 @@ end
 # Use an item from the Bag and/or on a Pokémon
 #===============================================================================
 def pbUseItem(bag,item,bagscene=nil)
-  found = false
   useType = pbGetItemData(item,ITEM_FIELD_USE)
-  if pbIsMachine?(item)    # TM or HM or TR
+  if pbIsMachine?(item)    # TM or HM
     if $Trainer.pokemonCount==0
       pbMessage(_INTL("There is no Pokémon."))
       return 0
@@ -695,12 +696,8 @@ def pbUseItem(bag,item,bagscene=nil)
     pbMessage(_INTL("\\se[PC access]You booted up {1}.\1",PBItems.getName(item)))
     if !pbConfirmMessage(_INTL("Do you want to teach {1} to a Pokémon?",movename))
       return 0
-    elsif mon=pbMoveTutorChoose(machine,nil,true)
+    elsif pbMoveTutorChoose(machine,nil,true)
       bag.pbDeleteItem(item) if pbIsTechnicalMachine?(item) && !INFINITE_TMS
-      if pbIsTechnicalRecord?(item)
-        bag.pbDeleteItem(item)
-        $Trainer.party[mon].trmoves.push(machine)
-      end
       return 1
     end
     return 0
@@ -735,7 +732,7 @@ def pbUseItem(bag,item,bagscene=nil)
           if ret && useType==1   # Usable on Pokémon, consumed
             bag.pbDeleteItem(item)
             if !bag.pbHasItem?(item)
-              pbMessage(_INTL("You used your last {1}.",PBItems.getName(item)))
+              pbMessage(_INTL("You used your last {1}.",PBItems.getName(item))) { screen.pbUpdate }
               break
             end
           end
@@ -770,18 +767,14 @@ def pbUseItemOnPokemon(item,pkmn,scene)
     return false if machine==nil
     movename = PBMoves.getName(machine)
     if pkmn.shadowPokemon?
-      pbMessage(_INTL("Shadow Pokémon can't be taught any moves."))
+      pbMessage(_INTL("Shadow Pokémon can't be taught any moves.")) { scene.pbUpdate }
     elsif !pkmn.compatibleWithMove?(machine)
-      pbMessage(_INTL("{1} can't learn {2}.",pkmn.name,movename))
+      pbMessage(_INTL("{1} can't learn {2}.",pkmn.name,movename)) { scene.pbUpdate }
     else
-      pbMessage(_INTL("\\se[PC access]You booted up {1}.\1",PBItems.getName(item)))
-      if pbConfirmMessage(_INTL("Do you want to teach {1} to {2}?",movename,pkmn.name))
-        if pbLearnMove(pkmn,machine,false,true)
+      pbMessage(_INTL("\\se[PC access]You booted up {1}.\1",PBItems.getName(item))) { scene.pbUpdate }
+      if pbConfirmMessage(_INTL("Do you want to teach {1} to {2}?",movename,pkmn.name)) { scene.pbUpdate }
+        if pbLearnMove(pkmn,machine,false,true) { scene.pbUpdate }
           $PokemonBag.pbDeleteItem(item) if pbIsTechnicalMachine?(item) && !INFINITE_TMS
-          if pbIsTechnicalRecord?(item)
-            $PokemonBag.pbDeleteItem(item)
-            pkmn.trmoves.push(machine)
-          end
           return true
         end
       end
@@ -796,7 +789,7 @@ def pbUseItemOnPokemon(item,pkmn,scene)
   if ret && useType && useType==1   # Usable on Pokémon, consumed
     $PokemonBag.pbDeleteItem(item)
     if !$PokemonBag.pbHasItem?(item)
-      pbMessage(_INTL("You used your last {1}.",PBItems.getName(item)))
+      pbMessage(_INTL("You used your last {1}.",PBItems.getName(item))) { scene.pbUpdate }
     end
   end
   return ret

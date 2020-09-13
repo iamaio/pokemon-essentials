@@ -119,17 +119,20 @@ begin
     Yawn                = 113
     GorillaTactics      = 114
     BallFetch           = 115
-    LashOut             = 118
-    BurningJealousy     = 119
-    NoRetreat           = 120
-    Obstruct            = 121
-    JawLock             = 122
-    JawLockUser         = 123 
-    TarShot             = 124
-    Octolock            = 125
-    OctolockUser        = 126
-    BlunderPolicy       = 127
-	
+    PerishBody          = 116
+    Obstruct            = 117
+    JawLock             = 118
+    JawLockUser         = 119 
+    TarShot             = 120
+    Octolock            = 121
+    OctolockUser        = 122
+    NoRetreat           = 123
+    LashOut             = 124
+    BurningJealousy     = 125
+    BlunderPolicy       = 126
+
+
+    
     #===========================================================================
     # These effects apply to a battler position
     #===========================================================================
@@ -142,7 +145,7 @@ begin
     Wish                      = 6
     WishAmount                = 7
     WishMaker                 = 8
-
+    
     #===========================================================================
     # These effects apply to a side
     #===========================================================================
@@ -168,7 +171,7 @@ begin
     Tailwind           = 19
     ToxicSpikes        = 20
     WideGuard          = 21
-
+    
     #===========================================================================
     # These effects apply to the battle (i.e. both sides)
     #===========================================================================

@@ -23,19 +23,19 @@ class PokeBattle_Move
   def pbMissMessage(user,target); return false; end
 
   #=============================================================================
-  #
+  # 
   #=============================================================================
   # Whether the move is currently in the "charging" turn of a two turn attack.
   # Is false if Power Herb or another effect lets a two turn move charge and
   # attack in the same turn.
   # user.effects[PBEffects::TwoTurnAttack] is set to the move's ID during the
   # charging turn, and is 0 during the attack turn.
-  def pbIsChargingTurn?(user); return false; end
-  def pbDamagingMove?; return damagingMove?; end
+  def pbIsChargingTurn?(user); return false;         end
+  def pbDamagingMove?;         return damagingMove?; end
 
   def pbContactMove?(user)
     return false if user.hasActiveAbility?(:LONGREACH)
-    return true if physicalMove? && @function=="196" # Shell Side Arm
+    return true if physicalMove? && @function=="209" # Shell Side Arm
     return contactMove?
   end
 
@@ -93,7 +93,7 @@ class PokeBattle_Move
   # Move failure checks
   #=============================================================================
   # Check whether the move fails completely due to move-specific requirements.
-  def pbMoveFailed?(user,targets); return false; end
+  def pbMoveFailed?(user,targets);        return false; end
   # Checks whether the move will be ineffective against the target.
   def pbFailsAgainstTarget?(user,target); return false; end
 
@@ -175,7 +175,7 @@ class PokeBattle_Move
        target.form==0 && isConst?(target.ability,PBAbilities,:ICEFACE) && physicalMove?
       target.damageState.iceface = true
       return
-    end
+    end     
   end
 
   def pbReduceDamage(user,target)
@@ -190,7 +190,7 @@ class PokeBattle_Move
     # Disguise takes the damage
     return if target.damageState.disguise
     # Ice Face takes the damage
-    return if target.damageState.iceface
+    return if target.damageState.iceface 
     # Target takes the damage
     if damage>=target.hp
       damage = target.hp
@@ -288,6 +288,7 @@ class PokeBattle_Move
       else
         @battle.pbDisplay(_INTL("A critical hit!"))
       end
+      user.criticalHits+=1
     end
     # Effectiveness message, for moves with 1 hit
     if !multiHitMove? && user.effects[PBEffects::ParentalBond]==0
@@ -301,10 +302,6 @@ class PokeBattle_Move
 
   def pbEndureKOMessage(target)
     if target.damageState.disguise
-    elsif target.damageState.iceface
-      @battle.pbShowAbilitySplash(target)
-      target.pbChangeForm(1,_INTL("{1} transformed!",target.pbThis))
-      @battle.pbHideAbilitySplash(target)
       @battle.pbShowAbilitySplash(target)
       if PokeBattle_SceneConstants::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("Its disguise served it as a decoy!"))
@@ -313,6 +310,10 @@ class PokeBattle_Move
       end
       @battle.pbHideAbilitySplash(target)
       target.pbChangeForm(1,_INTL("{1}'s disguise was busted!",target.pbThis))
+    elsif target.damageState.iceface
+      @battle.pbShowAbilitySplash(target)
+      target.pbChangeForm(1,_INTL("{1} transformed!",target.pbThis))
+      @battle.pbHideAbilitySplash(target)
     elsif target.damageState.endured
       @battle.pbDisplay(_INTL("{1} endured the hit!",target.pbThis))
     elsif target.damageState.sturdy
@@ -336,6 +337,7 @@ class PokeBattle_Move
   # Used by Counter/Mirror Coat/Metal Burst/Revenge/Focus Punch/Bide/Assurance.
   def pbRecordDamageLost(user,target)
     damage = target.damageState.hpLost
+    target.yamaskhp+= damage  #yamask
     # NOTE: In Gen 3 where a move's category depends on its type, Hidden Power
     #       is for some reason countered by Counter rather than Mirror Coat,
     #       regardless of its calculated type. Hence the following two lines of

@@ -69,7 +69,8 @@ BattleHandlers::HPHealItem.add(:BERRYJUICE,
     if forced
       battle.pbDisplay(_INTL("{1}'s HP was restored.",battler.pbThis))
     else
-      battle.pbDisplay(_INTL("{1} restored its health using its {2}!",battler.pbThis,itemName))
+      battle.pbDisplay(_INTL("{1} restored its health using its {2}!",battler.pbThis,
+         itemName))
     end
     next true
   }
@@ -152,13 +153,14 @@ BattleHandlers::HPHealItem.add(:ORANBERRY,
       battler.pbRecoverHP(20)
     else
       battler.pbRecoverHP(10)
-    end
+    end  
     itemName = PBItems.getName(item)
     if forced
       PBDebug.log("[Item triggered] Forced consuming of #{itemName}")
       battle.pbDisplay(_INTL("{1}'s HP was restored.",battler.pbThis))
     else
-      battle.pbDisplay(_INTL("{1} restored a little HP using its {2}!",battler.pbThis,itemName))
+      battle.pbDisplay(_INTL("{1} restored a little HP using its {2}!",battler.pbThis,
+         itemName))
     end
     next true
   }
@@ -186,13 +188,14 @@ BattleHandlers::HPHealItem.add(:SITRUSBERRY,
       battler.pbRecoverHP?(battler.totalhp/2)
     else
       battler.pbRecoverHP(battler.totalhp/4)
-    end
+    end 
     itemName = PBItems.getName(item)
     if forced
       PBDebug.log("[Item triggered] Forced consuming of #{itemName}")
       battle.pbDisplay(_INTL("{1}'s HP was restored.",battler.pbThis))
     else
-      battle.pbDisplay(_INTL("{1} restored its health using its {2}!",battler.pbThis,itemName))
+      battle.pbDisplay(_INTL("{1} restored its health using its {2}!",battler.pbThis,
+         itemName))
     end
     next true
   }
@@ -204,11 +207,11 @@ BattleHandlers::HPHealItem.add(:STARFBERRY,
     PBStats.eachMainBattleStat { |s| stats.push(s) if battler.pbCanRaiseStatStage?(s,battler) }
     next false if stats.length==0
     stat = stats[battle.pbRandom(stats.length)]
-    if battler.hasActiveAbility?(:RIPEN)
+    if battler.hasActiveAbility(:RIPEN)
       next pbBattleStatIncreasingBerry(battler,battle,item,forced,stat,4)
     else
       next pbBattleStatIncreasingBerry(battler,battle,item,forced,stat,2)
-    end
+   end  
   }
 )
 
@@ -993,7 +996,7 @@ BattleHandlers::CriticalCalcUserItem.add(:RAZORCLAW,
 
 BattleHandlers::CriticalCalcUserItem.copy(:RAZORCLAW,:SCOPELENS)
 
-BattleHandlers::CriticalCalcUserItem.add(:LEEK,
+BattleHandlers::CriticalCalcUserItem.add(:STICK,
   proc { |item,user,target,c|
     next c+2 if user.isSpecies?(:FARFETCHD) || user.isSpecies?(:SIRFETCHD)
   }
@@ -1041,6 +1044,7 @@ BattleHandlers::TargetItemOnHit.add(:ENIGMABERRY,
     next if target.damageState.substitute || target.damageState.disguise || target.damageState.iceface
     next if !PBTypes.superEffective?(target.damageState.typeMod)
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
+    target.pbConsumeItem
   }
 )
 
@@ -1055,7 +1059,7 @@ BattleHandlers::TargetItemOnHit.add(:JABOCABERRY,
       user.pbReduceHP(user.totalhp/4,false)
     else
       user.pbReduceHP(user.totalhp/8,false)
-    end
+    end   
     battle.pbDisplay(_INTL("{1} consumed its {2} and hurt {3}!",target.pbThis,
        target.itemName,user.pbThis(true)))
     target.pbConsumeItem
@@ -1071,6 +1075,7 @@ BattleHandlers::TargetItemOnHit.add(:KEEBERRY,
   proc { |item,user,target,move,battle|
     next if !move.physicalMove?
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
+    target.pbConsumeItem
   }
 )
 
@@ -1093,6 +1098,7 @@ BattleHandlers::TargetItemOnHit.add(:MARANGABERRY,
   proc { |item,user,target,move,battle|
     next if !move.specialMove?
     BattleHandlers.triggerTargetItemOnHitPositiveBerry(item,target,battle,false)
+    target.pbConsumeItem
   }
 )
 
@@ -1117,7 +1123,7 @@ BattleHandlers::TargetItemOnHit.add(:ROWAPBERRY,
       user.pbReduceHP(user.totalhp/4,false)
     else
       user.pbReduceHP(user.totalhp/8,false)
-    end
+    end 
     battle.pbDisplay(_INTL("{1} consumed its {2} and hurt {3}!",target.pbThis,
        target.itemName,user.pbThis(true)))
     target.pbConsumeItem
@@ -1188,7 +1194,7 @@ BattleHandlers::TargetItemOnHitPositiveBerry.add(:ENIGMABERRY,
       battler.pbRecoverHP(battler.totalhp/2)
     else
       battler.pbRecoverHP(battler.totalhp/4)
-    end
+    end  
     if forced
       battle.pbDisplay(_INTL("{1}'s HP was restored.",battler.pbThis))
     else
@@ -1201,13 +1207,13 @@ BattleHandlers::TargetItemOnHitPositiveBerry.add(:ENIGMABERRY,
 
 BattleHandlers::TargetItemOnHitPositiveBerry.add(:KEEBERRY,
   proc { |item,battler,battle,forced|
-    increment=1
+    increment=1  
     next false if !forced && battle.pbCheckOpposingAbility(:UNNERVE,battler.index)
     next false if !battler.pbCanRaiseStatStage?(PBStats::DEFENSE,battler)
     itemName = PBItems.getName(item)
     if battler.hasActiveAbility?(:RIPEN)
       increment *=2
-    end
+    end      
     if !forced
       battle.pbCommonAnimation("EatBerry",battler)
       next battler.pbRaiseStatStageByCause(PBStats::DEFENSE,increment,battler,itemName)
@@ -1225,7 +1231,7 @@ BattleHandlers::TargetItemOnHitPositiveBerry.add(:MARANGABERRY,
     itemName = PBItems.getName(item)
     if battler.hasActiveAbility?(:RIPEN)
       increment*=2
-    end
+    end 
     if !forced
       battle.pbCommonAnimation("EatBerry",battler)
       next battler.pbRaiseStatStageByCause(PBStats::SPDEF,increment,battler,itemName)
@@ -1267,6 +1273,25 @@ BattleHandlers::TargetItemAfterMoveUse.add(:REDCARD,
     battle.pbDisplay(_INTL("{1} was dragged out!",user.pbThis))
     battle.pbClearChoice(user.index)   # Replacement Pokémon does nothing this round
     switched.push(user.index)
+  }
+)
+
+#===============================================================================
+# ItemOnStatLoss handlers
+#===============================================================================
+
+BattleHandlers::ItemOnStatLoss.add(:EJECTPACK,
+  proc { |item,battler,user,move,switched,battle|
+    next if battle.pbAllFainted?(battler.idxOpposingSide)
+    next if !battle.pbCanChooseNonActive?(battler.index)
+    battle.pbCommonAnimation("UseItem",battler)
+    battle.pbDisplay(_INTL("{1} is switched out with the {2}!",battler.pbThis,battler.itemName))
+    battler.pbConsumeItem(true,false)
+    newPkmn = battle.pbGetReplacementPokemonIndex(battler.index)   # Owner chooses
+    next if newPkmn<0
+    battle.pbRecallAndReplace(battler.index,newPkmn)
+    battle.pbClearChoice(battler.index)   # Replacement Pokémon does nothing this round
+    switched.push(battler.index)
   }
 )
 
@@ -1336,7 +1361,7 @@ BattleHandlers::EndOfMoveItem.add(:LEPPABERRY,
     choice = found[battle.pbRandom(found.length)]
     pkmnMove = battler.pokemon.moves[choice]
     pkmnMove.pp += 10
-    pkmnMove.pp = pkmnMove.totalpp if pkmnMove.pp>pkmnMove.totalpp
+    pkmnMove.pp = pkmnMove.totalpp if pkmnMove.pp>pkmnMove.totalpp 
     battler.moves[choice].pp = pkmnMove.pp
     moveName = PBMoves.getName(pkmnMove.id)
     if forced
@@ -1603,6 +1628,15 @@ BattleHandlers::ItemOnSwitchIn.add(:AIRBALLOON,
   proc { |item,battler,battle|
     battle.pbDisplay(_INTL("{1} floats in the air with its {2}!",
        battler.pbThis,battler.itemName))
+  }
+)
+
+BattleHandlers::ItemOnSwitchIn.add(:ROOMSERVICE,
+  proc { |item,battler,battle|
+    next if battle.field.effects[PBEffects::TrickRoom] == 0
+    next if !battler.pbCanLowerStatStage?(PBStats::SPEED,battler)
+    battler.pbLowerStatStageByCause(PBStats::SPEED,1,battler,battler.itemName)
+    battler.pbConsumeItem
   }
 )
 

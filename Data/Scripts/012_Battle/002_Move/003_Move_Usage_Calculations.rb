@@ -110,10 +110,12 @@ class PokeBattle_Move
     accuracy = (accuracy * modifiers[ACC_MULT] / 0x1000).round
     evasion  = (evasion  * modifiers[EVA_MULT] / 0x1000).round
     evasion = 1 if evasion<1
-    # Calculation/Blunder Policy
+    # Calculation
+    ##changes for blunderpolicy
     ret = @battle.pbRandom(100) < modifiers[BASE_ACC] * accuracy / evasion
     user.effects[PBEffects::BlunderPolicy]=true if !ret
     return ret
+    ##changes - before: return @battle.pbRandom(100) < modifiers[BASE_ACC] * accuracy / evasion
   end
 
   def pbCalcAccuracyModifiers(user,target,modifiers)
@@ -316,6 +318,10 @@ class PokeBattle_Move
     if user.effects[PBEffects::Charge]>0 && isConst?(type,PBTypes,:ELECTRIC)
       multipliers[BASE_DMG_MULT] *= 2
     end
+    # Tar Shot
+    if target.effects[PBEffects::TarShot] && isConst?(type,PBTypes,:FIRE)
+      multipliers[BASE_DMG_MULT] *= 2
+    end
     # Mud Sport
     if isConst?(type,PBTypes,:ELECTRIC)
       @battle.eachBattler do |b|
@@ -326,10 +332,6 @@ class PokeBattle_Move
       if @battle.field.effects[PBEffects::MudSportField]>0
         multipliers[BASE_DMG_MULT] /= 3
       end
-    end
-    # Tar Shot
-    if target.effects[PBEffects::TarShot] && isConst?(type,PBTypes,:FIRE)
-      multipliers[BASE_DMG_MULT] *= 2
     end
     # Water Sport
     if isConst?(type,PBTypes,:FIRE)
@@ -388,15 +390,17 @@ class PokeBattle_Move
     case @battle.pbWeather
     when PBWeather::Sun, PBWeather::HarshSun
       if isConst?(type,PBTypes,:FIRE)
-        multipliers[FINAL_DMG_MULT] = (multipliers[FINAL_DMG_MULT]*1.5).round
+        multipliers[FINAL_DMG_MULT] = (multipliers[FINAL_DMG_MULT]*1.5).round if
+        !user.hasActiveItem?(:UTILITYUMBRELLA)
       elsif isConst?(type,PBTypes,:WATER)
-        multipliers[FINAL_DMG_MULT] /= 2
+        multipliers[FINAL_DMG_MULT] /= 2 if !user.hasActiveItem?(:UTILITYUMBRELLA)
       end
     when PBWeather::Rain, PBWeather::HeavyRain
       if isConst?(type,PBTypes,:FIRE)
-        multipliers[FINAL_DMG_MULT] /= 2
+        multipliers[FINAL_DMG_MULT] /= 2 if !user.hasActiveItem?(:UTILITYUMBRELLA)
       elsif isConst?(type,PBTypes,:WATER)
-        multipliers[FINAL_DMG_MULT] = (multipliers[FINAL_DMG_MULT]*1.5).round
+        multipliers[FINAL_DMG_MULT] = (multipliers[FINAL_DMG_MULT]*1.5).round if
+        !user.hasActiveItem?(:UTILITYUMBRELLA)
       end
     when PBWeather::Sandstorm
       if target.pbHasType?(:ROCK) && specialMove? && @function!="122"   # Psyshock

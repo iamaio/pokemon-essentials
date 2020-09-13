@@ -66,10 +66,6 @@ class PokeBattle_Battle
     # Other certain switching effects
     return true if NEWEST_BATTLE_MECHANICS && battler.pbHasType?(:GHOST)
     # Other certain trapping effects
-    if battler.effects[PBEffects::OctolockUser]>=0
-      partyScene.pbDisplay(_INTL("{1} can't be switched out!",battler.pbThis)) if partyScene
-      return false
-    end
     if battler.effects[PBEffects::JawLock]
       @battlers.each do |b|
         if (battler.effects[PBEffects::JawLockUser] == b.index) && !b.fainted?
@@ -77,7 +73,11 @@ class PokeBattle_Battle
           return false
         end
       end
-    end   
+    end
+    if battler.effects[PBEffects::OctolockUser]>=0
+      partyScene.pbDisplay(_INTL("{1} can't be switched out!",battler.pbThis)) if partyScene
+      return false
+    end
     if battler.effects[PBEffects::Trapping]>0 ||
        battler.effects[PBEffects::MeanLook]>=0 ||
        battler.effects[PBEffects::Ingrain] ||
@@ -202,7 +202,7 @@ class PokeBattle_Battle
           switched.push(idxBattler)
         else   # Player's Pokémon has fainted in a wild battle
           switch = false
-          if !pbDisplayConfirm(_INTL("Use next Pokémon?"))
+          if !pbDisplayConfirm(_INTL("Use next Pokémon?")) 
             switch = (pbRun(idxBattler,true)<=0)
           else
             switch = true
@@ -260,6 +260,7 @@ class PokeBattle_Battle
     else
       owner = pbGetOwnerName(b.index)
       pbDisplayBrief(_INTL("{1} withdrew {2}!",owner,battler.name))
+      b.effects[PBEffects::PerishBody]=0 # Reset Perish Body if has one
     end
   end
 
@@ -361,8 +362,8 @@ class PokeBattle_Battle
     end
     # Entry hazards
     # Stealth Rock
-    if battler.pbOwnSide.effects[PBEffects::StealthRock] && battler.takesIndirectDamage? &&
-       !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
+    if battler.pbOwnSide.effects[PBEffects::StealthRock] && battler.takesIndirectDamage? && 
+      !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
       aType = getConst(PBTypes,:ROCK) || 0
       bTypes = battler.pbTypes(true)
       eff = PBTypes.getCombinedEffectiveness(aType,bTypes[0],bTypes[1],bTypes[2])
@@ -395,7 +396,7 @@ class PokeBattle_Battle
       if battler.pbHasType?(:POISON)
         battler.pbOwnSide.effects[PBEffects::ToxicSpikes] = 0
         pbDisplay(_INTL("{1} absorbed the poison spikes!",battler.pbThis))
-      elsif battler.pbCanPoison?(nil,false) && !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
+      elsif battler.pbCanPoison?(nil,false)  && !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
         if battler.pbOwnSide.effects[PBEffects::ToxicSpikes]==2
           battler.pbPoison(nil,_INTL("{1} was badly poisoned by the poison spikes!",battler.pbThis),true)
         else
@@ -405,7 +406,7 @@ class PokeBattle_Battle
     end
     # Sticky Web
     if battler.pbOwnSide.effects[PBEffects::StickyWeb] && !battler.fainted? &&
-       !battler.airborne? && !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
+       !battler.airborne?  && !battler.hasActiveItem?(:HEAVYDUTYBOOTS)
       pbDisplay(_INTL("{1} was caught in a sticky web!",battler.pbThis))
       if battler.pbCanLowerStatStage?(PBStats::SPEED)
         battler.pbLowerStatStage(PBStats::SPEED,1,nil)

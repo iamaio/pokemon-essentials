@@ -157,15 +157,14 @@ class PokeBattle_Battle
             if b.abilityActive?
               pri = BattleHandlers.triggerPriorityChangeAbility(b.ability,b,move,pri)
             end
-            bArray[3] = pri
             # Grassy Glide
-            if move.function == "191" &&
-               @field.terrain == PBBattleTerrains::Grassy &&
+            if move.function == "215" && @field.terrain==PBBattleTerrains::Grassy &&
                !b.airborne?
               pri+=1
             end
+            # Grassy Glide             
             bArray[3] = pri
-            @choices[b.index][4] = pri
+            @choices[b.index][4] = pri          
           end
           # Calculate sub-priority (first/last within priority bracket)
           # NOTE: Going fast beats going slow. A Pokémon with Stall and Quick

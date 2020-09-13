@@ -376,7 +376,7 @@ class PokeBattle_Battle
     moneyLost = oldMoney-pbPlayer.money
     if moneyLost>0
       if trainerBattle?
-        pbDisplayPaused(_INTL("You gave ${1} to the winner...",moneyLost.to_s_formatted))
+        pbDisplayPaused(_INTL("You gave ${1} to the winner...",moneyLost.to_s_formatted))  
       else
         pbDisplayPaused(_INTL("You panicked and dropped ${1}...",moneyLost.to_s_formatted))
       end
@@ -384,16 +384,17 @@ class PokeBattle_Battle
   end
 
   def pbEndOfBattle
-    # Zacian/Zamazenta
+    ##behemoth attacks
     for i in @party1
       if (i.species == 888 || i.species == 889) && i.form == 1
         for j in i.moves
-          if j.id == 708 || j.id == 707
+          if j.id == 680 || j.id == 679
             j.id = 628
           end
         end
       end
     end
+    ##behemoth attacks
     oldDecision = @decision
     @decision = 4 if @decision==1 && wildBattle? && @caughtPokemon.length>0
     case oldDecision

@@ -28,7 +28,7 @@ class PokeBattle_Battle
       end
     end
   end
-
+  
   #=============================================================================
   # End Of Round weather
   #=============================================================================
@@ -79,7 +79,7 @@ class PokeBattle_Battle
         b.pbFaint if b.fainted?
       end
       # Weather damage
-      # NOTE:
+      # NOTE: 
       case curWeather
       when PBWeather::Sandstorm
         next if !b.takesSandstormDamage?
@@ -406,7 +406,7 @@ class PokeBattle_Battle
       if b.pbCanLowerStatStage?(PBStats::SPDEF,b,self)
         b.pbLowerStatStage(PBStats::SPDEF,1,b)
       end
-    end  
+    end    
     # Trapping attacks (Bind/Clamp/Fire Spin/Magma Storm/Sand Tomb/Whirlpool/Wrap)
     priority.each do |b|
       next if b.fainted? || b.effects[PBEffects::Trapping]==0
@@ -452,7 +452,7 @@ class PokeBattle_Battle
         if b.effects[PBEffects::Encore]==0 || b.moves[idxEncoreMove].pp==0
           b.effects[PBEffects::Encore] = 0
           pbDisplay(_INTL("{1}'s encore ended!",b.pbThis))
-        end
+        end 
       else
         PBDebug.log("[End of effect] #{b.pbThis}'s encore ended (encored move no longer known)")
         b.effects[PBEffects::Encore]     = 0
@@ -508,6 +508,16 @@ class PokeBattle_Battle
         pbJudgeCheckpoint(@battlers[perishSongUsers[0]])
       end
     end
+    # Perish Body
+    priority.each do |b|
+      next if b.fainted? || b.effects[PBEffects::PerishBody]==0
+        b.effects[PBEffects::PerishBody]-=1
+        pbDisplay(_INTL("{1}'s perish count fell to {2}!",b.pbThis,b.effects[PBEffects::PerishBody]))
+        if b.effects[PBEffects::PerishBody]==0
+          b.pbReduceHP(b.hp)
+        end
+      b.pbFaint if b.fainted?
+    end    
     # Check for end of battle
     if @decision>0
       pbGainExp
@@ -583,7 +593,7 @@ class PokeBattle_Battle
         if b.effects[PBEffects::Uproar]==0
           pbDisplay(_INTL("{1} calmed down.",b.pbThis))
         else
-          pbDisplay(_INTL("{1} is making an uproar!",b.pbThis))
+          pbDisplay(_INTL("{1} is making an uproar!",b.pbThis)) 
         end
       end
       # Slow Start's end message
@@ -647,8 +657,9 @@ class PokeBattle_Battle
       b.effects[PBEffects::SpikyShield]      = false
       b.effects[PBEffects::Spotlight]        = 0
       b.effects[PBEffects::ThroatChop]       -= 1 if b.effects[PBEffects::ThroatChop]>0
-      b.effects[PBEffects::LashOut]          = false
       b.effects[PBEffects::Obstruct]         = false
+      b.effects[PBEffects::LashOut]          = false
+      b.effects[PBEffects::BurningJealousy]  = false
       b.lastHPLost                           = 0
       b.lastHPLostFromFoe                    = 0
       b.tookDamage                           = false
@@ -674,6 +685,7 @@ class PokeBattle_Battle
     @field.effects[PBEffects::FairyLock]   -= 1 if @field.effects[PBEffects::FairyLock]>0
     @field.effects[PBEffects::FusionBolt]  = false
     @field.effects[PBEffects::FusionFlare] = false
+    ## neutralizing gas
     hasabil=false
     neutralactive=field.effects[PBEffects::NeutralizingGas]
     eachBattler {|b|
@@ -687,6 +699,7 @@ class PokeBattle_Battle
       @field.effects[PBEffects::NeutralizingGas] = false
       priority.each { |b| b.pbEffectsOnSwitchIn }
     end
+    ## neutralizing gas
     @endOfRound = false
   end
 end

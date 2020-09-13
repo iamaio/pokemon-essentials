@@ -575,6 +575,19 @@ MultipleForms.register(:LYCANROC,{
   },
 })
 
+MultipleForms.register(:TOXEL,{
+  "getFormOnCreation" => proc { |pkmn|
+   natures=[1,5,7,10,12,15,16,17,18,20,21,23]
+   lowkey=false
+   nature=pkmn.nature
+   lowkey = true if natures.include?(nature)
+   next 1 if lowkey
+   next 0            
+  },
+})
+
+MultipleForms.copy(:TOXEL,:TOXTRICITY)
+
 MultipleForms.register(:WISHIWASHI,{
   "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
     next 0
@@ -634,6 +647,8 @@ MultipleForms.register(:MIMIKYU,{
   }
 })
 
+MultipleForms.copy(:MIMIKYU,:EISCUE,:MORPEKO,:CRAMORANT)
+
 MultipleForms.register(:NECROZMA,{
   "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
     # Fused forms are 1 and 2, Ultra form is 3 or 4 depending on which fusion
@@ -669,31 +684,6 @@ MultipleForms.register(:NECROZMA,{
       end
     end
   }
-}) 
-  
-MultipleForms.register(:TOXEL,{
-  "getFormOnCreation" => proc { |pkmn|
-   natures=[1,5,7,10,12,15,16,17,18,20,21,23]
-   lowkey=false
-   nature=pkmn.nature
-   lowkey = true if natures.include?(nature)
-   next 1 if lowkey
-   next 0            
-  },
-})
-
-MultipleForms.copy(:TOXEL,:TOXTRICITY)
-
-MultipleForms.register(:EISCUE,{
-  "getFormOnLeavingBattle" => proc { |pkmn,battle,usedInBattle,endBattle|
-    next 0 if pkmn.fainted? || endBattle
-  }
-})
-
-MultipleForms.register(:INDEEDEE,{
-  "getForm" => proc { |pkmn|
-    next pkmn.gender
-  }
 })
 
 MultipleForms.register(:ZAMAZENTA,{
@@ -707,8 +697,14 @@ MultipleForms.register(:ZACIAN,{
   "getForm" => proc { |pkmn|
     next 1 if isConst?(pkmn.item,PBItems,:RUSTEDSWORD)
     next 0
-  }
+  }  
 }) 
+
+MultipleForms.register(:INDEEDEE,{
+  "getForm" => proc { |pkmn|
+    next pkmn.gender
+  }
+})
 
 #===============================================================================
 # Alolan forms
@@ -726,18 +722,3 @@ MultipleForms.register(:PIKACHU,{
 })
 
 MultipleForms.copy(:PIKACHU,:EXEGGCUTE,:CUBONE)
-
-#===============================================================================
-# Galarian forms
-#===============================================================================
-
-# These species don't have visually different Galarian forms, but they need to
-# evolve into different forms depending on the location where they evolved.
-MultipleForms.register(:KOFFING,{
-  "getForm" => proc { |pkmn|
-    next if pkmn.formSimple>=2
-    mapPos = pbGetMetadata($game_map.map_id,MetadataMapPosition)
-    next 1 if mapPos && mapPos[0]==1   # Tiall region
-    next 0
-  }
-})

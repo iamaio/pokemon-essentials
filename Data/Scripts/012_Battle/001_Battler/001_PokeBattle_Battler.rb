@@ -108,6 +108,17 @@ class PokeBattle_Battler
     @pokemon.statusCount = value if @pokemon
   end
 
+  attr_reader :criticalHits
+  def criticalHits=(value)
+    @criticalHits=value
+    @pokemon.criticalHits=value if @pokemon
+  end
+  
+  attr_reader :yamaskhp
+  def yamaskhp=(value)
+    @yamaskhp=value
+    @pokemon.yamaskhp=value if @pokemon
+  end
   #=============================================================================
   # Properties from Pokémon
   #=============================================================================
@@ -273,8 +284,7 @@ class PokeBattle_Battler
 
   def isSpecies?(species)
     return @pokemon && @pokemon.isSpecies?(species)
-  end
-
+  end  
   # Returns the active types of this Pokémon. The array should not include the
   # same type more than once, and should not include any invalid type numbers
   # (e.g. -1).
@@ -352,11 +362,9 @@ class PokeBattle_Battler
        :SHIELDSDOWN,
        :STANCECHANGE,
        :ZENMODE,
-       :ICEFACE,
        # Abilities intended to be inherent properties of a certain species
        :COMATOSE,
-       :RKSSYSTEM,
-       :GULPMISSILE
+       :RKSSYSTEM
     ]
     abilityBlacklist.each do |abil|
       return true if isConst?(@ability,PBAbilities,abil)

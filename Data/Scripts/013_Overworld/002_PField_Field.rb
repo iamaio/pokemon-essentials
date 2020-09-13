@@ -345,6 +345,20 @@ Events.onStepTakenFieldMovement += proc { |_sender,e|
         pbSlideOnIce(event)
       end
     end
+#yamask evo
+#  $Trainer.party.each do |pkmn|
+#    ret = pbCheckEvolutionEx(pkmn) { |pkmn, method, parameter, new_species|
+#      success = PBEvolution.call("afterBattleCheck", method, pkmn, parameter)
+#      next (success) ? new_species : -1
+#    }
+#    if ret>0
+#      evo = PokemonEvolutionScene.new
+#      evo.pbStartScreen(pkmn,ret)
+#      evo.pbEvolution(false)
+#      evo.pbEndScreen
+#    end
+#  end
+#
   end
 }
 

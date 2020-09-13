@@ -1107,3 +1107,34 @@ ItemHandlers::UseOnPokemon.add(:ABILITYCAPSULE,proc { |item,pkmn,scene|
   end
   next false
 })
+
+ItemHandlers::UseOnPokemon.add(:EXPCANDYXS,proc { |item,pkmn,scene|
+   if pkmn.level>=PBExperience::maxLevel || (pokemon.isShadow? rescue false)
+     scene.pbDisplay(_INTL("It won't have any effect."))
+     next false
+   else
+     experience=100   if isConst?(item,PBItems,:EXPCANDYXS)
+     experience=800   if isConst?(item,PBItems,:EXPCANDYS)
+     experience=3000  if isConst?(item,PBItems,:EXPCANDYM)
+     experience=10000 if isConst?(item,PBItems,:EXPCANDYL)
+     experience=30000 if isConst?(item,PBItems,:EXPCANDYXL)
+     newexp=PBExperience.pbAddExperience(pkmn.exp,experience,pkmn.growthrate)
+     newlevel=PBExperience.pbGetLevelFromExperience(newexp,pkmn.growthrate)
+     curlevel=pkmn.level
+     leveldif = newlevel - curlevel
+     scene.pbDisplay(_INTL("Your Pokémon gained {1} Exp. Points!",experience))
+     if newlevel==curlevel
+       pkmn.exp=newexp
+       pkmn.calcStats
+       scene.pbRefresh
+     else
+       leveldif.times do
+         pbChangeLevel(pkmn,pkmn.level+1,scene)
+         scene.pbHardRefresh
+       end
+       next true
+     end
+   end
+})
+
+ItemHandlers::UseOnPokemon.copy(:EXPCANDYXS,:EXPCANDYS,:EXPCANDYM,:EXPCANDYL,:EXPCANDYXL)

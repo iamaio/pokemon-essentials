@@ -122,6 +122,17 @@ class PokeBattle_Battle
     @endSpeechesWin    = []
     @party1            = p1
     @party2            = p2
+##behemoth attacks
+    for i in @party1
+      if (i.species == 888 || i.species == 889) && i.form == 1 ##its a form 1 zacian or zamazenta
+        for j in i.moves
+          if j.id == 628 ## has iron head?
+            i.species == 888 ? j.id = 680 : j.id = 679 ##replaces iron head for bblade if zacian or bbash if zamazenta
+          end
+        end
+      end
+    end
+##behemoth attacks
     @party1order       = Array.new(@party1.length) { |i| i }
     @party2order       = Array.new(@party2.length) { |i| i }
     @party1starts      = [0]
@@ -164,16 +175,6 @@ class PokeBattle_Battle
       @struggle = PokeBattle_Move.pbFromPBMove(self,PBMove.new(getConst(PBMoves,:STRUGGLE)))
     else
       @struggle = PokeBattle_Struggle.new(self,nil)
-    end
-    # Zacian/Zamazenta
-    for i in @party1
-      if (i.species == 888 || i.species == 889) && i.form == 1
-        for j in i.moves
-          if j.id == 628
-            i.species == 888 ? j.id = 708 : j.id = 707
-          end
-        end
-      end
     end
   end
 
@@ -609,7 +610,7 @@ class PokeBattle_Battle
   end
 
   #=============================================================================
-  #
+  # 
   #=============================================================================
   # Returns the battler representing the Pokémon at index idxParty in its party,
   # on the same side as a battler with battler index of idxBattlerOther.
@@ -660,7 +661,7 @@ class PokeBattle_Battle
     return if @field.weather==newWeather
     @field.weather = newWeather
     duration = (fixedDuration) ? 5 : -1
-    if duration>0 && user && user.itemActive?
+    if duration>0 && user && user.itemActive?    
       duration = BattleHandlers.triggerWeatherExtenderItem(user.item,
          @field.weather,duration,user,self)
     end
@@ -718,7 +719,7 @@ class PokeBattle_Battle
     return if @field.terrain==newTerrain
     @field.terrain = newTerrain
     duration = (fixedDuration) ? 5 : -1
-    if duration>0 && user && user.itemActive?
+    if duration>0 && user && user.itemActive?    
       duration = BattleHandlers.triggerTerrainExtenderItem(user.item,
          newTerrain,duration,user,self)
     end
@@ -735,6 +736,12 @@ class PokeBattle_Battle
     when PBBattleTerrains::Psychic
       pbDisplay(_INTL("The battlefield got weird!"))
     end
+    ##mimicry
+    for i in @battlers
+      next if !i
+      i.pbCheckTypeOnTerrainChange
+    end
+    ##mimicry
     # Check for terrain seeds that boost stats in a terrain
     eachBattler { |b| b.pbItemTerrainStatBoostCheck }
   end

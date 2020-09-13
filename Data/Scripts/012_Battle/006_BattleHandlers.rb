@@ -61,6 +61,7 @@ module BattleHandlers
   # Abilities/items that trigger at the end of using a move
   UserAbilityEndOfMove                = AbilityHandlerHash.new
   TargetItemAfterMoveUse              = ItemHandlerHash.new
+  ItemOnStatLoss                      = ItemHandlerHash.new ##EJECT PACK
   UserItemAfterMoveUse                = ItemHandlerHash.new
   TargetAbilityAfterMoveUse           = AbilityHandlerHash.new
   EndOfMoveItem                       = ItemHandlerHash.new   # Leppa Berry
@@ -190,7 +191,7 @@ module BattleHandlers
   def self.triggerAbilityOnStatLoss(ability,battler,stat,user)
     AbilityOnStatLoss.trigger(ability,battler,stat,user)
   end
-
+  
   #=============================================================================
 
   def self.triggerPriorityChangeAbility(ability,battler,move,pri)
@@ -341,6 +342,12 @@ module BattleHandlers
   def self.triggerTargetItemAfterMoveUse(item,battler,user,move,switched,battle)
     TargetItemAfterMoveUse.trigger(item,battler,user,move,switched,battle)
   end
+  
+  #eject pack
+  def self.triggerItemOnStatLoss(item,battler,user,move,switched,battle)
+    ItemOnStatLoss.trigger(item,battler,user,move,switched,battle)
+  end
+  #
 
   def self.triggerUserItemAfterMoveUse(item,user,targets,move,numHits,battle)
     UserItemAfterMoveUse.trigger(item,user,targets,move,numHits,battle)
@@ -521,7 +528,7 @@ def pbBattleStatIncreasingBerry(battler,battle,item,forced,stat,increment=1)
   itemName = PBItems.getName(item)
   if battler.hasActiveAbility?(:RIPEN)
     increment *=2
-  end
+  end  
   if forced
     PBDebug.log("[Item triggered] Forced consuming of #{itemName}")
     return battler.pbRaiseStatStage(stat,increment,battler)
@@ -597,7 +604,7 @@ def pbBattleTypeWeakingBerry(type,moveType,target,mults)
     mults[FINAL_DMG_MULT] = (mults[FINAL_DMG_MULT]/4).round
   else
     mults[FINAL_DMG_MULT] = (mults[FINAL_DMG_MULT]/2).round
-  end
+  end    
   target.damageState.berryWeakened = true
   target.battle.pbCommonAnimation("EatBerry",target)
 end
@@ -607,7 +614,8 @@ def pbBattleWeatherAbility(weather,battler,battle,ignorePrimal=false)
      (battle.field.weather==PBWeather::HarshSun ||
      battle.field.weather==PBWeather::HeavyRain ||
      battle.field.weather==PBWeather::StrongWinds)
-  return if battle.field.weather==weather
+  return if battle.field.weather==weather && battle.field.weatherDuration==-1
+  return if battle.field.weather==weather   ##change
   battle.pbShowAbilitySplash(battler)
   if !PokeBattle_SceneConstants::USE_ABILITY_SPLASH
     battle.pbDisplay(_INTL("{1}'s {2} activated!",battler.pbThis,battler.abilityName))

@@ -213,7 +213,7 @@ class PokeBattle_AI
     #---------------------------------------------------------------------------
     when "01A"
       if user.pbOwnSide.effects[PBEffects::Safeguard]>0
-        score -= 80
+        score -= 80 
       elsif user.status!=0
         score -= 40
       else
@@ -1434,7 +1434,7 @@ class PokeBattle_AI
         end
       end
       if skill>=PBTrainerAI.highSkill
-        if isConst?(target.ability,PBAbilities,:TRUANT) &&
+        if isConst?(target.ability,PBAbilities,:TRUANT) && 
            user.opposes?(target)
           score -= 90
         elsif isConst?(target.ability,PBAbilities,:SLOWSTART) &&
@@ -1460,13 +1460,13 @@ class PokeBattle_AI
            isConst?(user.ability,PBAbilities,:RKSSYSTEM) ||
            isConst?(user.ability,PBAbilities,:TRACE) ||
            isConst?(user.ability,PBAbilities,:ZENMODE) ||
-           isConst?(user.ability,PBAbilities,:ICEFACE) ||
-           isConst?(user.ability,PBAbilities,:GULPMISSILE) ||
-           isConst?(user.ability,PBAbilities,:NEUTRALIZINGGAS)
+           isConst?(target.ability,PBAbilities,:ICEFACE) ||
+           isConst?(target.ability,PBAbilities,:GULPMISSILE) ||
+           isConst?(target.ability,PBAbilities,:NEUTRALIZINGGAS)
           score -= 90
         end
         if skill>=PBTrainerAI.highSkill
-          if isConst?(user.ability,PBAbilities,:TRUANT) &&
+          if isConst?(user.ability,PBAbilities,:TRUANT) && 
              user.opposes?(target)
             score += 90
           elsif isConst?(user.ability,PBAbilities,:SLOWSTART) &&
@@ -1496,7 +1496,7 @@ class PokeBattle_AI
         end
       end
       if skill>=PBTrainerAI.highSkill
-        if isConst?(target.ability,PBAbilities,:TRUANT) &&
+        if isConst?(target.ability,PBAbilities,:TRUANT) && 
            user.opposes?(target)
           score -= 90
         elsif isConst?(target.ability,PBAbilities,:SLOWSTART) &&
@@ -1804,7 +1804,7 @@ class PokeBattle_AI
       score -= 90 if user.effects[PBEffects::Imprison]
     #---------------------------------------------------------------------------
     when "0B9"
-      score -= 90 if target.effects[PBEffects::Disable]>0
+      score -= 90 if target.effects[PBEffects::Disable]>0 
     #---------------------------------------------------------------------------
     when "0BA"
       score -= 90 if target.effects[PBEffects::Taunt]>0
@@ -1881,9 +1881,9 @@ class PokeBattle_AI
     #---------------------------------------------------------------------------
     when "0D4"
       if user.hp<=user.totalhp/4
-        score -= 90
+        score -= 90 
       elsif user.hp<=user.totalhp/2
-        score -= 50
+        score -= 50 
       end
     #---------------------------------------------------------------------------
     when "0D5", "0D6"
@@ -1980,7 +1980,7 @@ class PokeBattle_AI
          !target.pbCanLowerStatStage?(PBStats::SPATK,user)
         score -= 100
       elsif @battle.pbAbleNonActiveCount(user.idxOwnSide)==0
-        score -= 100
+        score -= 100 
       else
         score += target.stages[PBStats::ATTACK]*10
         score += target.stages[PBStats::SPATK]*10
@@ -2031,7 +2031,7 @@ class PokeBattle_AI
     when "0EB"
       if target.effects[PBEffects::Ingrain] ||
          (skill>=PBTrainerAI.highSkill && target.hasActiveAbility?(:SUCTIONCUPS))
-        score -= 90
+        score -= 90 
       else
         ch = 0
         @battle.pbParty(target.index).each_with_index do |pkmn,i|
@@ -2961,7 +2961,7 @@ class PokeBattle_AI
     #---------------------------------------------------------------------------
     when "167"
       if user.pbOwnSide.effects[PBEffects::AuroraVeil]>0 || @battle.pbWeather!=PBWeather::Hail
-        score -= 90
+        score -= 90 
       else
         score += 40
       end

@@ -67,4 +67,5 @@ class TilemapLoader
   def ox=(v);           @tilemap.ox = v;                        end
   def oy;               @tilemap.oy;                            end
   def oy=(v);           @tilemap.oy = v;                        end
-end
+  end
+  

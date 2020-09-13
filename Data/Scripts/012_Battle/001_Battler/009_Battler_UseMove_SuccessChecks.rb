@@ -8,6 +8,14 @@ class PokeBattle_Battler
   # move) or an unusable move may be called by another move such as Metronome.
   #=============================================================================
   def pbCanChooseMove?(move,commandPhase,showMessages=true,specialUsage=false)
+    # Stuff Cheeks
+    if move.function=="187" && (self.item==0 || !pbIsBerry?(self.item))
+      if showMessages
+        msg = _INTL("{1} can't use that move because it doesn't have any berry!",pbThis,move.name)
+        (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)      
+      end
+      return false 
+    end
     # Disable
     if @effects[PBEffects::DisableMove]==move.id && !specialUsage
       if showMessages
@@ -15,14 +23,6 @@ class PokeBattle_Battler
         (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
       end
       return false
-    end
-    # Stuff Cheeks
-    if move.function=="204" && (self.item==0 || !pbIsBerry?(self.item))
-      if showMessages
-        msg = _INTL("{1} can't use that move because it doesn't have any berry!",pbThis,move.name)
-        (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)      
-      end
-      return false 
     end
     # Heal Block
     if @effects[PBEffects::HealBlock]>0 && move.healingMove?
@@ -48,6 +48,20 @@ class PokeBattle_Battler
       end
       return false
     end
+    # Gorilla Tactics
+    if @effects[PBEffects::GorillaTactics]>=0
+      if hasActiveAbility?(:GORILLATACTICS)
+        if move.id!=@effects[PBEffects::GorillaTactics]
+          if showMessages
+            msg = _INTL("{1} allows the use of only {2} !",abilityName,PBMoves.getName(@effects[PBEffects::GorillaTactics]))
+            (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
+          end
+          return false
+        end
+      else
+        @effects[PBEffects::GorillaTactics] = -1        
+      end
+    end
     # Choice Band
     if @effects[PBEffects::ChoiceBand]>=0
       if hasActiveItem?([:CHOICEBAND,:CHOICESPECS,:CHOICESCARF]) &&
@@ -62,20 +76,6 @@ class PokeBattle_Battler
         end
       else
         @effects[PBEffects::ChoiceBand] = -1
-      end
-    end
-    # Gorilla Tactics
-    if @effects[PBEffects::GorillaTactics]>=0
-      if hasActiveAbility?(:GORILLATACTICS)
-        if move.id!=@effects[PBEffects::GorillaTactics]
-          if showMessages
-            msg = _INTL("{1} allows the use of only {2} !",abilityName,PBMoves.getName(@effects[PBEffects::GorillaTactics]))
-            (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
-          end
-          return false
-        end
-      else
-        @effects[PBEffects::GorillaTactics] = -1        
       end
     end
     # Taunt
@@ -149,13 +149,13 @@ class PokeBattle_Battler
     @effects[PBEffects::Rage] = false
     # Do nothing if using Snore/Sleep Talk
     if @status==PBStatuses::SLEEP && move.usableWhenAsleep?
-      @battle.pbDisplay(_INTL("{1} ignored orders and kept sleeping!",pbThis))
+      @battle.pbDisplay(_INTL("{1} ignored orders and kept sleeping!",pbThis)) 
       return false
     end
     b = ((@level+badgeLevel)*@battle.pbRandom(256)/256).floor
     # Use another move
     if b<badgeLevel
-      @battle.pbDisplay(_INTL("{1} ignored orders!",pbThis))
+      @battle.pbDisplay(_INTL("{1} ignored orders!",pbThis)) 
       return false if !@battle.pbCanShowFightMenu?(@index)
       otherMoves = []
       eachMoveWithIndex do |_m,i|
@@ -297,7 +297,7 @@ class PokeBattle_Battler
       @battle.pbDisplay(_INTL("{1} is in love with {2}!",pbThis,
          @battle.battlers[@effects[PBEffects::Attract]].pbThis(true)))
       if @battle.pbRandom(100)<50
-        @battle.pbDisplay(_INTL("{1} is immobilized by love!",pbThis))
+        @battle.pbDisplay(_INTL("{1} is immobilized by love!",pbThis)) 
         @lastMoveFailed = true
         return false
       end
@@ -311,7 +311,7 @@ class PokeBattle_Battler
   #=============================================================================
   def pbSuccessCheckAgainstTarget(move,user,target)
     # Unseen Fist
-    unseenfist=isConst?(user.ability,PBAbilities,:UNSEENFIST) && move.contactMove?
+    unseenfist=isConst?(user.ability,PBAbilities,:UNSEENFIST) && move.contactMove? #unseenfist    
     typeMod = move.pbCalcTypeMod(move.calcType,user,target)
     target.damageState.typeMod = typeMod
     # Two-turn attacks can't fail here in the charging turn
@@ -347,7 +347,7 @@ class PokeBattle_Battler
     if move.canProtectAgainst?
       # Quick Guard
       if target.pbOwnSide.effects[PBEffects::QuickGuard] &&
-         @battle.choices[user.index][4]>0 && !unseenfist   # Move priority saved from pbCalculatePriority
+         @battle.choices[user.index][4]>0 && !unseenfist  # Move priority saved from pbCalculatePriority
         @battle.pbCommonAnimation("QuickGuard",target)
         @battle.pbDisplay(_INTL("Quick Guard protected {1}!",target.pbThis(true)))
         target.damageState.protected = true
@@ -362,6 +362,7 @@ class PokeBattle_Battler
         @battle.successStates[user.index].protected = true
         return false
       end
+      # Obstruct
       if target.effects[PBEffects::Obstruct] && !unseenfist
         @battle.pbCommonAnimation("Obstruct",target)
         @battle.pbDisplay(_INTL("{1} protected itself!",target.pbThis))
@@ -371,9 +372,9 @@ class PokeBattle_Battler
           if user.pbCanLowerStatStage?(PBStats::DEFENSE)
             user.pbLowerStatStage(PBStats::DEFENSE,2,nil)
           end
-        end
+        end        
         return false
-      end
+      end      
       # King's Shield
       if target.effects[PBEffects::KingsShield] && move.damagingMove? && !unseenfist
         @battle.pbCommonAnimation("KingsShield",target)
@@ -441,7 +442,7 @@ class PokeBattle_Battler
     if move.pbDamagingMove? && PBTypes.ineffective?(typeMod)
       PBDebug.log("[Target immune] #{target.pbThis}'s type immunity")
       @battle.pbDisplay(_INTL("It doesn't affect {1}...",target.pbThis(true)))
-      return false
+      return false 
     end
     # Dark-type immunity to moves made faster by Prankster
     if NEWEST_BATTLE_MECHANICS && user.effects[PBEffects::Prankster] &&

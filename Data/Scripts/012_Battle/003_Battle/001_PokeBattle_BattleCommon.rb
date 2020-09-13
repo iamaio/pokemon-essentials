@@ -62,16 +62,14 @@ module PokeBattle_BattleCommon
     @caughtPokemon.clear
   end
 
-  # Ball Fetch	
-  def pbBallFetch(ball)
-    if $BallRetrieved == 0
-      $BallRetrieved=ball if ball != 268
-    end
-  end
-	
   #=============================================================================
   # Throw a Poké Ball
-  #=============================================================================
+  #============================================================================= 
+  def pbBallFetch(ball)
+    if $BallRetrieved == 0 
+      $BallRetrieved=ball if ball != 268
+    end    
+  end
   def pbThrowPokeBall(idxBattler,ball,rareness=nil,showPlayer=false)
     # Determine which Pokémon you're throwing the Poké Ball at
     battler = nil
@@ -95,6 +93,7 @@ module PokeBattle_BattleCommon
         pbDisplay(_INTL("{1} threw a {2}!",pbPlayer.name,itemName))
       end
       pbDisplay(_INTL("But there was no target..."))
+      pbBallFetch(ball)
       return
     end
     if itemName.starts_with_vowel?
@@ -107,6 +106,7 @@ module PokeBattle_BattleCommon
     if trainerBattle? && !(pbIsSnagBall?(ball) && battler.shadowPokemon?)
       @scene.pbThrowAndDeflect(ball,1)
       pbDisplay(_INTL("The Trainer blocked your Poké Ball! Don't be a thief!"))
+      pbBallFetch(ball)
       return
     end
     # Calculate the number of shakes (4=capture)
@@ -121,19 +121,19 @@ module PokeBattle_BattleCommon
     when 0
       pbDisplay(_INTL("Oh no! The Pokémon broke free!"))
       BallHandlers.onFailCatch(ball,self,battler)
-	  pbBallFetch(ball)
+      pbBallFetch(ball)
     when 1
       pbDisplay(_INTL("Aww! It appeared to be caught!"))
       BallHandlers.onFailCatch(ball,self,battler)
-	  pbBallFetch(ball)
+      pbBallFetch(ball)
     when 2
       pbDisplay(_INTL("Aargh! Almost had it!"))
       BallHandlers.onFailCatch(ball,self,battler)
-	  pbBallFetch(ball)
+      pbBallFetch(ball)
     when 3
       pbDisplay(_INTL("Gah! It was so close, too!"))
       BallHandlers.onFailCatch(ball,self,battler)
-	  pbBallFetch(ball)
+      pbBallFetch(ball)
     when 4
       pbDisplayBrief(_INTL("Gotcha! {1} was caught!",pkmn.name))
       @scene.pbThrowSuccess   # Play capture success jingle
@@ -143,7 +143,7 @@ module PokeBattle_BattleCommon
         battler.captured = true
         pbGainExp
         battler.captured = false
-      end
+      end      
       battler.pbReset
       if trainerBattle?
         @decision = 1 if pbAllFainted?(battler.index)
@@ -161,10 +161,6 @@ module PokeBattle_BattleCommon
       pkmn.makeUnprimal
       pkmn.pbUpdateShadowMoves if pkmn.shadowPokemon?
       pkmn.pbRecordFirstMoves
-      # Morpeko
-      if pkmn.species == isConst?(pkmn.species,PBSpecies,:MORPEKO) || pkmn.form!=0
-        pkmn.form = 0
-      end
       # Reset form
       pkmn.forcedForm = nil if MultipleForms.hasFunction?(pkmn.species,"getForm")
       @peer.pbOnLeavingBattle(self,pkmn,true,true)

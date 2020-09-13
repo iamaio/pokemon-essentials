@@ -65,7 +65,7 @@ class PokeBattle_Battler
   end
 
   #=============================================================================
-  #
+  # 
   #=============================================================================
   def pbBeginTurn(_choice)
     # Cancel some lingering effects which only apply until the user next moves
@@ -107,7 +107,6 @@ class PokeBattle_Battler
 
   def pbEndTurn(_choice)
     @lastRoundMoved = @battle.turnCount   # Done something this round
-    # Gorilla Tactics
     if @effects[PBEffects::GorillaTactics]<0 && @lastMoveUsed>=0 && hasActiveAbility?(:GORILLATACTICS)
       @effects[PBEffects::GorillaTactics]=@lastMoveUsed
     end
@@ -259,7 +258,7 @@ class PokeBattle_Battler
     end
     @battle.lastMoveUsed = move.id   # For Copycat
     @battle.lastMoveUser = @index   # For "self KO" battle clause to avoid draws
-    @battle.successStates[@index].useState = 1   # Battle Arena - assume failure
+    @battle.successStates[@index].useState = 1   # Battle Arena - assume failure 
     # Find the default user (self or Snatcher) and target(s)
     user = pbFindUser(choice,move)
     user = pbChangeUser(choice,move,user)
@@ -345,7 +344,7 @@ class PokeBattle_Battler
     if move.damagingMove?
       case @battle.pbWeather
       when PBWeather::HeavyRain
-        if isConst?(move.calcType,PBTypes,:FIRE)
+        if isConst?(move.calcType,PBTypes,:FIRE) && !user.hasActiveItem?(:UTILITYUMBRELLA)
           @battle.pbDisplay(_INTL("The Fire-type attack fizzled out in the heavy rain!"))
           user.lastMoveFailed = true
           pbCancelMoves
@@ -353,7 +352,7 @@ class PokeBattle_Battler
           return
         end
       when PBWeather::HarshSun
-        if isConst?(move.calcType,PBTypes,:WATER)
+        if isConst?(move.calcType,PBTypes,:WATER) && !user.hasActiveItem?(:UTILITYUMBRELLA)
           @battle.pbDisplay(_INTL("The Water-type attack evaporated in the harsh sunlight!"))
           user.lastMoveFailed = true
           pbCancelMoves
@@ -362,8 +361,8 @@ class PokeBattle_Battler
         end
       end
     end
-    # Protean / Libero
-    if user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO) && !move.callsAnotherMove? && !move.snatched
+    # Protean
+    if (user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO)) && !move.callsAnotherMove? && !move.snatched
       if user.pbHasOtherType?(move.calcType) && !PBTypes.isPseudoType?(move.calcType)
         @battle.pbShowAbilitySplash(user)
         user.pbChangeTypes(move.calcType)
@@ -371,9 +370,9 @@ class PokeBattle_Battler
         @battle.pbDisplay(_INTL("{1} transformed into the {2} type!",user.pbThis,typeName))
         @battle.pbHideAbilitySplash(user)
         # NOTE: The GF games say that if Curse is used by a non-Ghost-type
-        #       Pokémon which becomes Ghost-type because of Protean / Libero,
-        #       it should target and curse itself. I think this is silly, so
-        #       I'm making it choose a random opponent to curse instead.
+        #       Pokémon which becomes Ghost-type because of Protean, it should
+        #       target and curse itself. I think this is silly, so I'm making it
+        #       choose a random opponent to curse instead.
         if move.function=="10D" && targets.length==0   # Curse
           choice[3] = -1
           targets = pbFindTargets(choice,move,user)
@@ -506,6 +505,11 @@ class PokeBattle_Battler
       user.pbFaint if user.fainted?
       # External/general effects after all hits. Eject Button, Shell Bell, etc.
       pbEffectsAfterMove(user,targets,move,realNumHits)
+      #mimicry
+      @battle.pbPriority(true).each do |b|
+        b.pbCheckTypeOnTerrainChange
+      end
+    #mimicry
     end
     # End effect of Mold Breaker
     @battle.moldBreaker = false
@@ -537,7 +541,7 @@ class PokeBattle_Battler
     end
     # Dancer
     if !@effects[PBEffects::Dancer] && !user.lastMoveFailed && realNumHits>0 &&
-       !move.snatched && magicCoater<0 && @battle.pbCheckGlobalAbility(:DANCER) &&
+       !move.snatched && magicCoater<0 && @battle.pbCheckGlobalAbility(:DANCER)  &&
        move.danceMove?
       dancers = []
       @battle.pbPriority(true).each do |b|
@@ -572,6 +576,13 @@ class PokeBattle_Battler
         return if @battle.decision>0
       end
     end
+    @battle.eachBattler do |b|
+      next if battle.field.effects[PBEffects::TrickRoom] == 0
+      next if !b.pbCanLowerStatStage?(PBStats::SPEED,b)
+      next if !b.hasActiveItem?(:ROOMSERVICE)
+      b.pbLowerStatStageByCause(PBStats::SPEED,1,b,b.itemName)
+      b.pbConsumeItem
+    end
   end
 
   #=============================================================================
@@ -604,14 +615,15 @@ class PokeBattle_Battler
         end
         move.pbCrashDamage(user)
         user.pbItemHPHealCheck
-        # Blunder Policy
+        ##blunder policy
         if user.hasActiveItem?(:BLUNDERPOLICY) && user.effects[PBEffects::BlunderPolicy] && 
            targets[0].effects[PBEffects::TwoTurnAttack]==0 && move.function!="070" && hitNum==0
           if user.pbCanRaiseStatStage?(PBStats::SPEED,user,self) 
             pbRaiseStatStageByCause(PBStats::SPEED,2,user,itemName,showAnim=true,ignoreContrary=false)
             user.pbConsumeItem
           end
-        end   
+        end        
+        ##blunder policy
         pbCancelMoves
         return false
       end
