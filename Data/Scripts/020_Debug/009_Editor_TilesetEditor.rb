@@ -17,34 +17,31 @@ end
 
 
 class PokemonTilesetScene
-  TILESET_WIDTH = 256
-  TILE_SIZE     = 32
-
   def pbUpdateTileset
     @sprites["overlay"].bitmap.clear
     textpos = []
-    @sprites["tileset"].src_rect = Rect.new(0,@topy,TILESET_WIDTH,Graphics.height)
+    @sprites["tileset"].src_rect = Rect.new(0,@topy,256,Graphics.height-64)
     tilesize = @tileset.terrain_tags.xsize
-    for yy in 0...Graphics.height/TILE_SIZE
-      ypos = (yy+(@topy/TILE_SIZE))*8+384
+    for yy in 0...(Graphics.height-64)/32
+      ypos = (yy+(@topy/32))*8+384
       next if ypos>=tilesize
       for xx in 0...8
         terr = ypos<384 ? @tileset.terrain_tags[xx*48] : @tileset.terrain_tags[ypos+xx]
         if ypos<384
-          @tilehelper.bltTile(@sprites["overlay"].bitmap,xx*TILE_SIZE,yy*TILE_SIZE,xx*48)
+          @tilehelper.bltTile(@sprites["overlay"].bitmap,xx*32,yy*32,xx*48)
         end
-        textpos.push(["#{terr}",xx*TILE_SIZE+TILE_SIZE/2,yy*TILE_SIZE,2,Color.new(80,80,80),Color.new(192,192,192)])
+        textpos.push(["#{terr}",xx*32+16,yy*32,2,Color.new(80,80,80),Color.new(192,192,192)])
       end
     end
-    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy,TILE_SIZE,4,Color.new(255,0,0))
-    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy,4,TILE_SIZE,Color.new(255,0,0))
-    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy+28,TILE_SIZE,4,Color.new(255,0,0))
-    @sprites["overlay"].bitmap.fill_rect(@x+28,@y-@topy,4,TILE_SIZE,Color.new(255,0,0))
+    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy,32,4,Color.new(255,0,0))
+    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy,4,32,Color.new(255,0,0))
+    @sprites["overlay"].bitmap.fill_rect(@x,@y-@topy+28,32,4,Color.new(255,0,0))
+    @sprites["overlay"].bitmap.fill_rect(@x+28,@y-@topy,4,32,Color.new(255,0,0))
     pbDrawTextPositions(@sprites["overlay"].bitmap,textpos)
   end
 
   def pbGetSelected(x,y)
-    return (y<0) ? 48*(x/TILE_SIZE) : (y/TILE_SIZE)*8+384+(x/TILE_SIZE)
+    return (y<0) ? 48*(x/32) : (y/32)*8+384+(x/32)
   end
 
   def pbSetSelected(i,value)
@@ -69,8 +66,8 @@ class PokemonTilesetScene
       @tilehelper = TileDrawingHelper.fromTileset(@tileset)
       @sprites["tileset"].setBitmap("Graphics/Tilesets/#{@tileset.tileset_name}")
       @x = 0
-      @y = -TILE_SIZE
-      @topy = -TILE_SIZE
+      @y = -32
+      @topy = -32
       pbUpdateTileset
     end
   end
@@ -82,25 +79,25 @@ class PokemonTilesetScene
     @tileset = @tilesetwrapper.data[1]
     @tilehelper = TileDrawingHelper.fromTileset(@tileset)
     @sprites = {}
-    @sprites["title"] = Window_UnformattedTextPokemon.new(_INTL("Tileset Editor\r\nPgUp/PgDn: SCROLL\r\nZ: MENU"))
+    @sprites["title"] = Window_UnformattedTextPokemon.new(_INTL("Tileset Editor (PgUp/PgDn: SCROLL; Z: MENU)"))
     @sprites["title"].viewport = @viewport
-    @sprites["title"].x        = TILESET_WIDTH
+    @sprites["title"].x        = 0
     @sprites["title"].y        = 0
-    @sprites["title"].width    = Graphics.width - TILESET_WIDTH
-    @sprites["title"].height   = 128
-    @sprites["tileset"] = IconSprite.new(0,0,@viewport)
+    @sprites["title"].width    = Graphics.width
+    @sprites["title"].height   = 64
+    @sprites["tileset"] = IconSprite.new(0,64,@viewport)
     @sprites["tileset"].setBitmap("Graphics/Tilesets/#{@tileset.tileset_name}")
-    @sprites["tileset"].src_rect = Rect.new(0,0,TILESET_WIDTH,Graphics.height)
-    @sprites["overlay"] = BitmapSprite.new(TILESET_WIDTH,Graphics.height,@viewport)
+    @sprites["tileset"].src_rect = Rect.new(0,0,256,Graphics.height-64)
+    @sprites["overlay"] = BitmapSprite.new(256,Graphics.height-64,@viewport)
     @sprites["overlay"].x = 0
-    @sprites["overlay"].y = 0
+    @sprites["overlay"].y = 64
     pbSetSystemFont(@sprites["overlay"].bitmap)
     @sprites["title"].visible = true
     @sprites["tileset"].visible = true
     @sprites["overlay"].visible = true
     @x = 0
-    @y = -TILE_SIZE
-    @topy = -TILE_SIZE
+    @y = -32
+    @topy = -32
     pbUpdateTileset
     pbFadeInAndShow(@sprites)
     height = @sprites["tileset"].bitmap.height
@@ -109,37 +106,37 @@ class PokemonTilesetScene
       Graphics.update
       Input.update
       if Input.repeat?(Input::UP)
-        @y -= TILE_SIZE
-        @y = -TILE_SIZE if @y<-TILE_SIZE
+        @y -= 32
+        @y = -32 if @y<-32
         @topy = @y if @y<@topy
         pbUpdateTileset
       elsif Input.repeat?(Input::DOWN)
-        @y += TILE_SIZE
-        @y = height-TILE_SIZE if @y>=height-TILE_SIZE
-        @topy = @y-Graphics.height+TILE_SIZE if @y-@topy>=Graphics.height
+        @y += 32
+        @y = height-32 if @y>=height-32
+        @topy = @y-(Graphics.height-64)+32 if @y-@topy>=Graphics.height-64
         pbUpdateTileset
       elsif Input.repeat?(Input::LEFT)
-        @x -= TILE_SIZE
+        @x -= 32
         @x = 0 if @x<0
         pbUpdateTileset
       elsif Input.repeat?(Input::RIGHT)
-        @x += TILE_SIZE
-        @x = TILESET_WIDTH-TILE_SIZE if @x>=TILESET_WIDTH-TILE_SIZE
+        @x += 32
+        @x = 256-32 if @x>=256-32
         pbUpdateTileset
       elsif Input.repeat?(Input::L)
-        @y -= (Graphics.height/TILE_SIZE)*TILE_SIZE
-        @topy -= (Graphics.height/TILE_SIZE)*TILE_SIZE
-        @y = -TILE_SIZE if @y<-TILE_SIZE
+        @y -= ((Graphics.height-64)/32)*32
+        @topy -= ((Graphics.height-64)/32)*32
+        @y = -32 if @y<-32
         @topy = @y if @y<@topy
-        @topy = -TILE_SIZE if @topy<-TILE_SIZE
+        @topy = -32 if @topy<-32
         pbUpdateTileset
       elsif Input.repeat?(Input::R)
-        @y += (Graphics.height/TILE_SIZE)*TILE_SIZE
-        @topy += (Graphics.height/TILE_SIZE)*TILE_SIZE
-        @y = height-TILE_SIZE if @y>=height-TILE_SIZE
-        @topy = @y-Graphics.height+TILE_SIZE if @y-@topy>=Graphics.height
-        if @topy>=height-Graphics.height
-          @topy = height-Graphics.height
+        @y += ((Graphics.height-64)/32)*32
+        @topy += ((Graphics.height-64)/32)*32
+        @y = height-32 if @y>=height-32
+        @topy = @y-(Graphics.height-64)+32 if @y-@topy>=Graphics.height-64
+        if @topy>=height-(Graphics.height-64)
+          @topy = height-(Graphics.height-64)
         end
         pbUpdateTileset
       elsif Input.trigger?(Input::A)
@@ -152,11 +149,11 @@ class PokemonTilesetScene
         ret = pbShowCommands(nil,commands,-1)
         case ret
         when 0
-          @y = height-TILE_SIZE
-          @topy = @y-Graphics.height+TILE_SIZE if @y-@topy>=Graphics.height
+          @y = height-32
+          @topy = @y-(Graphics.height-64)+32 if @y-@topy>=Graphics.height-64
           pbUpdateTileset
         when 1
-          @y = -TILE_SIZE
+          @y = -32
           @topy = @y if @y<@topy
           pbUpdateTileset
         when 2

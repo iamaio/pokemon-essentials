@@ -130,8 +130,6 @@ class GraphicsLister
   def initialize(folder,selection)
     @sprite = IconSprite.new(0,0)
     @sprite.bitmap = nil
-    @sprite.x      = Graphics.width * 3 / 4
-    @sprite.y      = (Graphics.height - 64) / 2 + 64
     @sprite.z      = 2
     @folder = folder
     @selection = selection
@@ -181,18 +179,23 @@ class GraphicsLister
   def refresh(index)
     return if index<0
     @sprite.setBitmap(@folder+@commands[index])
-    sprite_width = @sprite.bitmap.width
-    sprite_height = @sprite.bitmap.height
-    @sprite.ox = sprite_width/2
-    @sprite.oy = sprite_height/2
-    scale_x = (Graphics.width/2).to_f/sprite_width
-    scale_y = (Graphics.height-64).to_f/sprite_height
-    if scale_x<1.0 || scale_y<1.0
-      min_scale = [scale_x, scale_y].min
-      @sprite.zoom_x = @sprite.zoom_y = min_scale
-    else
-      @sprite.zoom_x = @sprite.zoom_y = 1.0
+    ww = @sprite.bitmap.width
+    wh = @sprite.bitmap.height
+    sx = (Graphics.width-256).to_f/ww
+    sy = (Graphics.height-64).to_f/wh
+    if sx<1.0 || sy<1.0
+      if sx>sy
+        ww = sy*ww
+        wh = (Graphics.height-64).to_f
+      else
+        wh = sx*wh
+        ww = (Graphics.width-256).to_f
+      end
     end
+    @sprite.x =      (Graphics.width-((Graphics.width-256)/2))-(ww/2)
+    @sprite.y =      (Graphics.height-((Graphics.height-64)/2))-(wh/2)
+    @sprite.zoom_x = ww*1.0/@sprite.bitmap.width
+    @sprite.zoom_y = wh*1.0/@sprite.bitmap.height
   end
 end
 
@@ -269,9 +272,7 @@ class MapLister
   def initialize(selmap,addGlobal=false)
     @sprite = SpriteWrapper.new
     @sprite.bitmap = nil
-    @sprite.x      = Graphics.width * 3 / 4
-    @sprite.y      = (Graphics.height - 64) / 2 + 64
-    @sprite.z      = -2
+    @sprite.z      = 2
     @commands = []
     @maps = pbMapTree
     @addGlobalOffset = (addGlobal) ? 1 : 0
@@ -317,8 +318,8 @@ class MapLister
     return if index<0
     return if index==0 && @addGlobalOffset==1
     @sprite.bitmap = createMinimap(@maps[index-@addGlobalOffset][0])
-    @sprite.ox = @sprite.bitmap.width/2
-    @sprite.oy = @sprite.bitmap.height/2
+    @sprite.x      = (Graphics.width-((Graphics.width-256)/2))-(@sprite.bitmap.width/2)
+    @sprite.y      = (Graphics.height-((Graphics.height-64)/2))-(@sprite.bitmap.height/2)
   end
 end
 
@@ -444,8 +445,6 @@ class TrainerTypeLister
   def initialize(selection,includeNew)
     @sprite = IconSprite.new(0,0)
     @sprite.bitmap = nil
-    @sprite.x      = Graphics.width * 3 / 4
-    @sprite.y      = (Graphics.height - 64) / 2 + 64
     @sprite.z      = 2
     @selection = selection
     @commands = []
@@ -501,18 +500,23 @@ class TrainerTypeLister
     rescue
       @sprite.setBitmap(nil)
     end
-    sprite_width = @sprite.bitmap.width
-    sprite_height = @sprite.bitmap.height
-    @sprite.ox = sprite_width/2
-    @sprite.oy = sprite_height/2
-    scale_x = (Graphics.width/2).to_f/sprite_width
-    scale_y = (Graphics.height-64).to_f/sprite_height
-    if scale_x<1.0 || scale_y<1.0
-      min_scale = [scale_x, scale_y].min
-      @sprite.zoom_x = @sprite.zoom_y = min_scale
-    else
-      @sprite.zoom_x = @sprite.zoom_y = 1.0
+    ww = @sprite.bitmap.width
+    wh = @sprite.bitmap.height
+    sx = (Graphics.width-256).to_f()/ww
+    sy = (Graphics.height-64).to_f()/wh
+    if sx<1.0 || sy<1.0
+      if sx>sy
+        ww = sy*ww
+        wh = (Graphics.height-64).to_f()
+      else
+        wh = sx*wh
+        ww = (Graphics.width-256).to_f()
+      end
     end
+    @sprite.x      = (Graphics.width-((Graphics.width-256)/2))-(ww/2)
+    @sprite.y      = (Graphics.height-((Graphics.height-64)/2))-(wh/2)
+    @sprite.zoom_x = ww*1.0/@sprite.bitmap.width
+    @sprite.zoom_y = wh*1.0/@sprite.bitmap.height
   end
 end
 

@@ -208,8 +208,8 @@ def pbIsUnlosableItem?(item,species,ability)
      :GENESECT => [:BURNDRIVE,:CHILLDRIVE,:DOUSEDRIVE,:SHOCKDRIVE],
      :KYOGRE   => [:BLUEORB],
      :GROUDON  => [:REDORB],
-     :ZACIAN   => [:RUSTEDSWORD],
-     :ZAMAZENTA=> [:RUSTEDSHIELD]
+     :ZACIAN   => [:RUSTEDSWORD],   
+     :ZAMAZENTA=> [:RUSTEDSHIELD]     
   }
   ret = false
   combos.each do |comboSpecies, items|
@@ -415,7 +415,7 @@ def pbTopRightWindow(text, scene = nil)
     Graphics.update
     Input.update
     window.update
-    scene.pbUpdate if scene
+    scene.pbUpdate if scene    
     break if Input.trigger?(Input::C)
   end
   window.dispose

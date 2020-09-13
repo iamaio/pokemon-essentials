@@ -1979,7 +1979,7 @@ class PokeBattle_Move_0C0 < PokeBattle_Move
 
   def pbNumHits(user,targets)
     if isConst?(@id,PBMoves,:WATERSHURIKEN) &&
-       user.isSpecies?(:GRENINJA) && user.form==2
+       user.isSpecies?(:GRENINJA) && user.form==1
       return 3
     end
     hitChances = [2,2,3,3,4,5]
@@ -1990,7 +1990,7 @@ class PokeBattle_Move_0C0 < PokeBattle_Move
 
   def pbBaseDamage(baseDmg,user,target)
     if isConst?(@id,PBMoves,:WATERSHURIKEN) &&
-       user.isSpecies?(:GRENINJA) && user.form==2
+       user.isSpecies?(:GRENINJA) && user.form==1
       return 20
     end
     return super
