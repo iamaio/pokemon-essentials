@@ -677,7 +677,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:SOUNDPROOF,
     end
     battle.pbHideAbilitySplash(target)
     next true
-    
+
   }
 )
 
@@ -947,7 +947,7 @@ BattleHandlers::DamageCalcUserAbility.add(:FLOWERGIFT,
     w = user.battle.pbWeather
     if move.physicalMove? && (w==PBWeather::Sun || w==PBWeather::HarshSun) &&
       !user.hasActiveItem?(:UTILITYUMBRELLA)
-      mults[ATK_MULT] = (mults[ATK_MULT]*1.5).round 
+      mults[ATK_MULT] = (mults[ATK_MULT]*1.5).round
     end
   }
 )
@@ -1187,7 +1187,7 @@ BattleHandlers::DamageCalcUserAllyAbility.add(:FLOWERGIFT,
 BattleHandlers::DamageCalcUserAllyAbility.add(:STEELYSPIRIT,
   proc { |ability,user,target,move,mults,baseDmg,type|
 #      mults[ATK_MULT] = (mults[ATK_MULT]*1.5).round if isConst?(type,PBTypes,:STEEL)
-      mults[ATK_MULT] = (mults[ATK_MULT]*1.5).round if baseDmg == 8 
+      mults[ATK_MULT] = (mults[ATK_MULT]*1.5).round if baseDmg == 8
   }
 )
 
@@ -1601,39 +1601,13 @@ BattleHandlers::TargetAbilityOnHit.add(:MUMMY,
   proc { |ability,user,target,move,battle|
     next if !move.pbContactMove?(user)
     next if user.fainted?
-    abilityBlacklist = [
-       # This ability
-       :MUMMY,
-       # Form-changing abilities
-       :BATTLEBOND,
-       :DISGUISE,
-       :ICEFACE,
-#       :FLOWERGIFT,                                      # This can be replaced
-#       :FORECAST,                                        # This can be replaced
-       :MULTITYPE,
-       :POWERCONSTRUCT,
-       :SCHOOLING,
-       :SHIELDSDOWN,
-       :STANCECHANGE,
-       :ZENMODE,
-       # Abilities intended to be inherent properties of a certain species
-       :COMATOSE,
-       :GULPMISSILE,
-       :RKSSYSTEM,
-    ]
-    failed = false
-    abilityBlacklist.each do |abil|
-      next if !isConst?(user.ability,PBAbilities,abil)
-      failed = true
-      break
-    end
-    next if failed
+    next if user.unstoppableAbility? || user.ability == ability
     oldAbil = -1
     battle.pbShowAbilitySplash(target) if user.opposes?(target)
     if user.affectedByContactEffect?(PokeBattle_SceneConstants::USE_ABILITY_SPLASH)
       oldAbil = user.ability
       battle.pbShowAbilitySplash(user,true,false) if user.opposes?(target)
-      user.ability = getConst(PBAbilities,:MUMMY)
+      user.ability = ability
       battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
       if PokeBattle_SceneConstants::USE_ABILITY_SPLASH
         battle.pbDisplay(_INTL("{1}'s Ability became {2}!",user.pbThis,user.abilityName))
@@ -1684,7 +1658,7 @@ BattleHandlers::TargetAbilityOnHit.add(:SANDSPIT,
   proc { |ability,target,battler,move,battle|
     pbBattleWeatherAbility(PBWeather::Sandstorm,battler,battle)
   }
-)  
+)
 
 BattleHandlers::TargetAbilityOnHit.add(:STATIC,
   proc { |ability,user,target,move,battle|
@@ -1755,7 +1729,7 @@ BattleHandlers::TargetAbilityOnHit.add(:PERISHBODY,
       battle.pbDisplay(_INTL("Both Pokémon will faint in three turns!"))
     else
       battle.pbDisplay(_INTL("{1} will faint in three turns!",user.pbThis))
-    end    
+    end
     user.effects[PBEffects::PerishBody] = 3
     target.effects[PBEffects::PerishBody] = 3 if target.effects[PBEffects::PerishBody] == 0
     battle.pbHideAbilitySplash(target)
@@ -1772,7 +1746,7 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
        # Form-changing abilities
        :BATTLEBOND,
        :DISGUISE,
-       :ICEFACE,       
+       :ICEFACE,
 #       :FLOWERGIFT,                                      # This can be replaced
 #       :FORECAST,                                        # This can be replaced
        :MULTITYPE,
@@ -1787,7 +1761,7 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
        :RKSSYSTEM,
        :GULPMISSILE,
        # Abilities that are plain old blocked.
-       :NEUTRALIZINGGAS       
+       :NEUTRALIZINGGAS
     ]
     failed = false
     abilityBlacklist.each do |abil|
@@ -1839,7 +1813,7 @@ BattleHandlers::TargetAbilityOnHit.add(:GULPMISSILE,
         elsif gulpform==2
           msg = nil
           user.pbParalyze(target,msg)
-        end        
+        end
       end
       battle.pbHideAbilitySplash(target)
     end
@@ -2235,7 +2209,7 @@ BattleHandlers::EOREffectAbility.add(:BALLFETCH,
       $BallRetrieved = 0
       battler.battle.pbDisplay(_INTL("{1}'s {2} fetched the {3}!",battler.pbThis,battler.abilityName,battler.itemName))
       battle.pbHideAbilitySplash(battler)
-    end    
+    end
   }
 )
 
@@ -2479,7 +2453,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FOREWARN,
         # Counter, Mirror Coat, Metal Burst
         power = 120 if ["071","072","073"].include?(moveData[MOVE_FUNCTION_CODE])
         # Sonic Boom, Dragon Rage, Night Shade, Endeavor, Psywave,
-        # Return, Frustration, Crush Grip, Gyro Ball, Hidden Power, 
+        # Return, Frustration, Crush Grip, Gyro Ball, Hidden Power,
         # Natural Gift, Trump Card, Flail, Grass Knot
         power = 80 if ["06A","06B","06D","06E","06F",
                        "089","08A","08C","08D","090",
@@ -2699,15 +2673,15 @@ BattleHandlers::AbilityOnSwitchIn.add(:SCREENCLEANER,
         battle.pbDisplay(_INTL("The opposing team's Light Screen wore off!")) if side == 0
         battle.pbDisplay(_INTL("Your team's Light Screen wore off!")) if side == 1
       end
-      if battle.sides[side].effects[PBEffects::Reflect]>0        
+      if battle.sides[side].effects[PBEffects::Reflect]>0
         battle.sides[side].effects[PBEffects::Reflect] = 0
         battle.pbDisplay(_INTL("The opposing team's Reflect wore off!")) if side == 0
-        battle.pbDisplay(_INTL("Your team's Reflect wore off!")) if side == 1        
+        battle.pbDisplay(_INTL("Your team's Reflect wore off!")) if side == 1
       end
       if battle.sides[side].effects[PBEffects::AuroraVeil]>0
         battle.sides[side].effects[PBEffects::AuroraVeil] = 0
         battle.pbDisplay(_INTL("The opposing team's Aurora Veil wore off!")) if side == 0
-        battle.pbDisplay(_INTL("Your team's Aurora Veil wore off!")) if side == 1                
+        battle.pbDisplay(_INTL("Your team's Aurora Veil wore off!")) if side == 1
       end
     end
     battle.pbHideAbilitySplash(battler)
@@ -2750,42 +2724,11 @@ BattleHandlers::AbilityOnSwitchOut.add(:REGENERATOR,
 BattleHandlers::AbilityChangeOnBattlerFainting.add(:POWEROFALCHEMY,
   proc { |ability,battler,fainted,battle|
     next if battler.opposes?(fainted)
-    abilityBlacklist = [
-       # Replaces self with another ability
-       :POWEROFALCHEMY,
-       :RECEIVER,
-       :TRACE,
-       # Form-changing abilities
-       :BATTLEBOND,
-       :DISGUISE,
-       :ICEFACE,       
-       :FLOWERGIFT,
-       :FORECAST,
-       :MULTITYPE,
-       :POWERCONSTRUCT,
-       :SCHOOLING,
-       :SHIELDSDOWN,
-       :STANCECHANGE,
-       :ZENMODE,
-       # Appearance-changing abilities
-       :ILLUSION,
-       :IMPOSTER,
-       # Abilities intended to be inherent properties of a certain species
-       :COMATOSE,
-       :RKSSYSTEM,
-       :GULPMISSILE,
-       # Abilities that would be overpowered if allowed to be transferred
-       :WONDERGUARD,
-       # Abilities that are plain old blocked.
-       :NEUTRALIZINGGAS       
-    ]
-    failed = false
-    abilityBlacklist.each do |abil|
-      next if !isConst?(fainted.ability,PBAbilities,abil)
-      failed = true
-      break
-    end
-    next if failed
+    next if fainted.ungainableAbility? ||
+       isConst?(fainted.ability, PBAbilities, :POWEROFALCHEMY) ||
+       isConst?(fainted.ability, PBAbilities, :RECEIVER) ||
+       isConst?(fainted.ability, PBAbilities, :TRACE) ||
+       isConst?(fainted.ability, PBAbilities, :WONDERGUARD)
     battle.pbShowAbilitySplash(battler,true)
     battler.ability = fainted.ability
     battle.pbReplaceAbilitySplash(battler)
